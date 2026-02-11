@@ -13,8 +13,8 @@
     
     <style>
         :root {
-            --primary-blue: #3a7bd5; /* Azul del logo */
-            --primary-green: #5cb85c; /* Verde del logo */
+            --primary-blue: #3a7bd5; /* Azul aproximado del logo */
+            --primary-green: #5cb85c; /* Verde aproximado del logo */
             --dark-text: #2c3e50;
         }
 
@@ -22,14 +22,14 @@
         h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
 
         .navbar-brand img {
-            max-height: 60px; /* Ajuste para que el logo se vea bien */
+            max-height: 65px;
         }
 
         .hero {
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1603615732591-e470c652907c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
-            height: 80vh;
+            height: 70vh;
             color: white;
             display: flex;
             align-items: center;
@@ -40,10 +40,12 @@
             background-color: var(--primary-green);
             color: white;
             border-radius: 50px;
-            padding: 12px 30px;
+            padding: 12px 35px;
             font-weight: bold;
             border: none;
             transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-custom:hover {
@@ -97,7 +99,6 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <!-- Reemplaza logo.png por el nombre de tu archivo -->
                 <img src="logo.png" alt="GoClean Logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -106,8 +107,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-                    <li class="nav-item ms-lg-3"><a class="btn btn-outline-primary" href="https://wa.me/56912345678">Agendar Online</a></li>
+                    <li class="nav-item ms-lg-3"><a class="btn btn-outline-primary" href="https://wa.me/56912345678">Cotizar WhatsApp</a></li>
                 </ul>
             </div>
         </div>
@@ -116,9 +116,9 @@
     <!-- Hero -->
     <header class="hero">
         <div class="container">
-            <h1 class="display-4 mb-3">Limpieza Profesional con Sello de Calidad</h1>
-            <p class="lead mb-4">Especialistas en aseo profundo y mantención de espacios en todo Santiago.</p>
-            <a href="https://wa.me/56912345678" class="btn btn-custom btn-lg">Cotizar por WhatsApp</a>
+            <h1 class="display-4 mb-3">Limpieza Profesional de Alto Nivel</h1>
+            <p class="lead mb-4">Especialistas en aseo profundo y mantención técnica en toda la Región Metropolitana.</p>
+            <a href="https://wa.me/56912345678" class="btn-custom">Cotizar ahora por WhatsApp</a>
         </div>
     </header>
 
@@ -137,7 +137,7 @@
                         <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Aseo casas grandes">
                         <div class="card-body">
                             <h5 class="card-title fw-bold text-primary-custom">Aseo Profundo Casas de Alto Metraje</h5>
-                            <p class="card-text text-muted">Servicio especializado para residencias extensas que requieren atención en cada detalle. Realizamos limpieza técnica de ventanales, muros, cielos y sanitización profunda de áreas comunes, asegurando un estándar hotelero en hogares de gran escala.</p>
+                            <p class="card-text text-muted">Servicio élite para propiedades de gran tamaño. Realizamos una limpieza exhaustiva que abarca desde cielos y luminarias hasta rieles de ventanales y áreas de servicio, garantizando que cada metro cuadrado quede impecable.</p>
                         </div>
                     </div>
                 </div>
@@ -148,7 +148,7 @@
                         <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6958?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Aseo post remodelación">
                         <div class="card-body">
                             <h5 class="card-title fw-bold text-primary-custom">Aseo Post Remodelación</h5>
-                            <p class="card-text text-muted">Eliminamos el rastro de la obra. Nos encargamos del polvo fino, restos de pintura, siliconas y escombros ligeros. Dejamos tu propiedad impecable y lista para ser habitada inmediatamente después de tu proyecto de construcción.</p>
+                            <p class="card-text text-muted">Eliminamos el polvo de obra, restos de pintura y siliconas tras una construcción o reforma. Utilizamos maquinaria de succión industrial para dejar tu hogar u oficina reluciente y listo para habitar.</p>
                         </div>
                     </div>
                 </div>
@@ -158,8 +158,8 @@
                     <div class="card service-card h-100">
                         <img src="https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Lavado de alfombras">
                         <div class="card-body">
-                            <h5 class="card-title fw-bold text-primary-custom">Lavado Industrial de Alfombras</h5>
-                            <p class="card-text text-muted">Recuperamos la vida de tus alfombras y cubrepisos. Utilizamos sistema de inyección y extracción profunda que elimina manchas rebeldes, bacterias y olores orgánicos, devolviendo la suavidad y el color original a las fibras.</p>
+                            <h5 class="card-title fw-bold text-primary-custom">Mantención y Lavado de Alfombras</h5>
+                            <p class="card-text text-muted">Sistema de limpieza profunda con inyección y extracción. Eliminamos manchas difíciles, ácaros y olores incrustados en fibras naturales y sintéticas, prolongando la vida útil de tus alfombras y cubrepisos.</p>
                         </div>
                     </div>
                 </div>
@@ -170,9 +170,9 @@
     <!-- Footer -->
     <footer class="py-5 bg-light-section">
         <div class="container text-center">
-            <img src="logo.PNG" alt="GoClean Santiago" class="mb-4" style="height: 80px;">
-            <p class="mb-2"><strong>GoClean Santiago</strong> - Expertos en Limpieza Técnica</p>
-            <p class="text-muted mb-4">Atención en todas las comunas de la Región Metropolitana</p>
+            <img src="logo.png" alt="GoClean Santiago" class="mb-4" style="height: 80px;">
+            <p class="mb-2"><strong>GoClean Santiago</strong></p>
+            <p class="text-muted mb-4 small">Expertos en limpieza de detalle y grandes superficies.</p>
             <div class="d-flex justify-content-center gap-3">
                 <a href="https://instagram.com/goclean_santiago" class="fs-3 text-dark"><i class="fab fa-instagram"></i></a>
                 <a href="https://wa.me/56912345678" class="fs-3 text-success"><i class="fab fa-whatsapp"></i></a>
@@ -183,10 +183,11 @@
     </footer>
 
     <!-- Botón WhatsApp Flotante -->
-    <a href="https://wa.me/56991253842" class="floating-wa shadow">
+    <a href="https://wa.me/56912345678" class="floating-wa shadow">
         <i class="fab fa-whatsapp"></i>
     </a>
 
+    <!-- Scripts de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
