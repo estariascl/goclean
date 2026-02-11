@@ -3,191 +3,243 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoClean Santiago | Servicios de Aseo Profesional</title>
+    <title>GoClean Santiago | Cotizador de Limpieza</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --primary-blue: #3a7bd5; /* Azul aproximado del logo */
-            --primary-green: #5cb85c; /* Verde aproximado del logo */
-            --dark-text: #2c3e50;
+            --primary-blue: #3a7bd5;
+            --primary-green: #5cb85c;
+            --bg-gray: #f7f9fc;
         }
 
-        body { font-family: 'Open Sans', sans-serif; color: var(--dark-text); }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-gray); color: #333; }
         h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
 
-        .navbar-brand img {
-            max-height: 65px;
+        .navbar-brand img { max-height: 60px; }
+
+        /* Estilo del Formulario extraído */
+        .calculator-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            padding: 40px;
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
         }
 
-        .hero {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1603615732591-e470c652907c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+        .hero-mini {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1581578731548-c64695cc6958?auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
-            background-position: center;
-            height: 70vh;
-            color: white;
+            height: 300px;
             display: flex;
             align-items: center;
+            justify-content: center;
+            color: white;
             text-align: center;
         }
 
-        .btn-custom {
+        .form-label { font-weight: 600; font-size: 0.9rem; color: #444; }
+        .form-control, .form-select {
+            border: 1px solid #e1e5eb;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .checkbox-group {
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+
+        .btn-submit {
             background-color: var(--primary-green);
             color: white;
+            border: none;
+            padding: 15px 40px;
             border-radius: 50px;
-            padding: 12px 35px;
-            font-weight: bold;
-            border: none;
+            font-weight: 700;
+            width: 100%;
+            font-size: 1.1rem;
             transition: 0.3s;
-            text-decoration: none;
-            display: inline-block;
+            margin-top: 20px;
         }
 
-        .btn-custom:hover {
+        .btn-submit:hover {
             background-color: var(--primary-blue);
-            color: white;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
-
-        .service-card {
-            border: none;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border-radius: 15px;
-            overflow: hidden;
-            transition: 0.3s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .service-card img {
-            height: 220px;
-            object-fit: cover;
-        }
-
-        .text-primary-custom { color: var(--primary-blue); }
-        .bg-light-section { background-color: #f8f9fa; }
 
         .floating-wa {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: #25d366;
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 30px;
-            z-index: 1000;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: fixed; bottom: 30px; right: 30px;
+            background-color: #25d366; color: white;
+            width: 60px; height: 60px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 30px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             text-decoration: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="logo.png" alt="GoClean Logo">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
-                    <li class="nav-item ms-lg-3"><a class="btn btn-outline-primary" href="https://wa.me/56912345678">Cotizar WhatsApp</a></li>
-                </ul>
-            </div>
+            <a class="navbar-brand" href="#"><img src="logo.png" alt="GoClean Santiago"></a>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <header class="hero">
+    <header class="hero-mini">
         <div class="container">
-            <h1 class="display-4 mb-3">Limpieza Profesional de Alto Nivel</h1>
-            <p class="lead mb-4">Especialistas en aseo profundo y mantención técnica en toda la Región Metropolitana.</p>
-            <a href="https://wa.me/56912345678" class="btn-custom">Cotizar ahora por WhatsApp</a>
+            <h1 class="display-5">Calcular Tu Costo de Limpieza</h1>
+            <p>Obtén un presupuesto detallado según tus necesidades específicas</p>
         </div>
     </header>
 
-    <!-- Servicios -->
-    <section id="servicios" class="py-5">
-        <div class="container">
-            <div class="text-center mb-5">
-                <h2 class="display-5">Nuestros Servicios</h2>
-                <div class="mx-auto" style="width: 80px; height: 4px; background: var(--primary-green);"></div>
-            </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="calculator-container">
+                    
+                    <!-- FORMULARIO CONFIGURADO PARA ENVÍO -->
+                    <form action="https://formsubmit.co/TU_CORREO@DOMINIO.COM" method="POST">
+                        
+                        <!-- Configuración FormSubmit -->
+                        <input type="hidden" name="_subject" value="Nueva Solicitud de Presupuesto - GoClean Santiago">
+                        <input type="hidden" name="_captcha" value="false">
 
-            <div class="row g-4">
-                <!-- Servicio 1: Casas alto metraje -->
-                <div class="col-md-4">
-                    <div class="card service-card h-100">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Aseo casas grandes">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold text-primary-custom">Aseo Profundo Casas de Alto Metraje</h5>
-                            <p class="card-text text-muted">Servicio élite para propiedades de gran tamaño. Realizamos una limpieza exhaustiva que abarca desde cielos y luminarias hasta rieles de ventanales y áreas de servicio, garantizando que cada metro cuadrado quede impecable.</p>
-                        </div>
-                    </div>
-                </div>
+                        <div class="row g-3">
+                            <!-- Datos Personales -->
+                            <div class="col-md-4">
+                                <label class="form-label">Nombre y Apellido*</label>
+                                <input type="text" name="your-name" class="form-control" placeholder="Juan Pérez" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Email*</label>
+                                <input type="email" name="email-cliente" class="form-control" placeholder="nombre@correo.com" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Teléfono*</label>
+                                <input type="tel" name="your-tel" class="form-control" placeholder="+569..." required>
+                            </div>
 
-                <!-- Servicio 2: Post Remodelación -->
-                <div class="col-md-4">
-                    <div class="card service-card h-100">
-                        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6958?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Aseo post remodelación">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold text-primary-custom">Aseo Post Remodelación</h5>
-                            <p class="card-text text-muted">Eliminamos el polvo de obra, restos de pintura y siliconas tras una construcción o reforma. Utilizamos maquinaria de succión industrial para dejar tu hogar u oficina reluciente y listo para habitar.</p>
-                        </div>
-                    </div>
-                </div>
+                            <!-- Detalles de Propiedad -->
+                            <div class="col-md-4">
+                                <label class="form-label">Propiedad*</label>
+                                <select name="your-propiedad" class="form-select" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Casa">Casa</option>
+                                    <option value="Casa nueva (sin uso)">Casa nueva (sin uso)</option>
+                                    <option value="Departamento">Departamento</option>
+                                    <option value="Departamento nuevo (sin uso)">Departamento nuevo (sin uso)</option>
+                                    <option value="Oficina">Oficina</option>
+                                    <option value="Tienda">Tienda</option>
+                                    <option value="Centro médico">Centro médico</option>
+                                    <option value="Local Comercial">Local Comercial</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Estado de propiedad*</label>
+                                <select name="your-estado" class="form-select" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="Habitada">Habitada</option>
+                                    <option value="Desocupada">Desocupada</option>
+                                    <option value="Post remodelación (Habitada)">Post remodelación (Habitada)</option>
+                                    <option value="Post remodelación (Desocupada)">Post remodelación (Desocupada)</option>
+                                    <option value="Post arriendatario (Desocupada)">Post arriendatario (Desocupada)</option>
+                                    <option value="Nueva (sin uso, artefactos nuevos)">Nueva (sin uso, artefactos nuevos)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Metros cuadrados*</label>
+                                <select name="your-metros" class="form-select" required>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="30m²">30m²</option><option value="40m²">40m²</option><option value="50m²">50m²</option>
+                                    <option value="60m²">60m²</option><option value="70m²">70m²</option><option value="80m²">80m²</option>
+                                    <option value="90m²">90m²</option><option value="100m²">100m²</option><option value="150m²">150m²</option>
+                                    <option value="200m²">200m²</option><option value="300m²">300m²</option><option value="Más de 500m²">Más de 500m²</option>
+                                </select>
+                            </div>
 
-                <!-- Servicio 3: Lavado de Alfombras -->
-                <div class="col-md-4">
-                    <div class="card service-card h-100">
-                        <img src="https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Lavado de alfombras">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold text-primary-custom">Mantención y Lavado de Alfombras</h5>
-                            <p class="card-text text-muted">Sistema de limpieza profunda con inyección y extracción. Eliminamos manchas difíciles, ácaros y olores incrustados en fibras naturales y sintéticas, prolongando la vida útil de tus alfombras y cubrepisos.</p>
+                            <!-- Habitaciones / Baños -->
+                            <div class="col-md-3">
+                                <label class="form-label">Dormitorios*</label>
+                                <select name="your-habitaciones" class="form-select" required>
+                                    <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                                    <option value="4">4</option><option value="5">5</option><option value="más de 15">Más de 15</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Baños*</label>
+                                <select name="your-banos" class="form-select" required>
+                                    <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+                                    <option value="4">4</option><option value="más de 10">Más de 10</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Salas de Estar</label>
+                                <select name="your-salasestar" class="form-select">
+                                    <option value="0">0</option><option value="1">1</option><option value="2">2</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Comuna*</label>
+                                <input type="text" name="your-comuna" class="form-control" placeholder="Ej: Providencia" required>
+                            </div>
                         </div>
-                    </div>
+
+                        <!-- Checkboxes Servicios adicionales -->
+                        <div class="checkbox-group mt-4">
+                            <label class="form-label d-block mb-3 text-primary">Servicios Adicionales Requeridos:</label>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Limpieza profunda"><label class="form-check-label">Limpieza profunda</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Limpieza de vidrios"><label class="form-check-label">Limpieza de vidrios</label></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Limpieza de tapices"><label class="form-check-label">Limpieza de tapices</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Lavado de alfombras"><label class="form-check-label">Lavado de alfombras</label></div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Pulido de pisos"><label class="form-check-label">Pulido de pisos</label></div>
+                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Limpieza de quincho"><label class="form-check-label">Quincho y parrilla</label></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Fecha propuesta</label>
+                                <input type="text" name="your-fecha" class="form-control" placeholder="DD/MM/AAAA">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Comentarios</label>
+                                <textarea name="comentarios" class="form-control" rows="1" placeholder="Información adicional..."></textarea>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-submit">COTIZAR AHORA</button>
+
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Footer -->
-    <footer class="py-5 bg-light-section">
-        <div class="container text-center">
-            <img src="logo.png" alt="GoClean Santiago" class="mb-4" style="height: 80px;">
-            <p class="mb-2"><strong>GoClean Santiago</strong></p>
-            <p class="text-muted mb-4 small">Expertos en limpieza de detalle y grandes superficies.</p>
-            <div class="d-flex justify-content-center gap-3">
-                <a href="https://instagram.com/goclean_santiago" class="fs-3 text-dark"><i class="fab fa-instagram"></i></a>
-                <a href="https://wa.me/56912345678" class="fs-3 text-success"><i class="fab fa-whatsapp"></i></a>
-            </div>
-            <hr class="my-4">
-            <p class="small text-muted">&copy; 2024 GoClean Santiago. Todos los derechos reservados.</p>
-        </div>
+    <footer class="py-5 text-center mt-5">
+        <p class="text-muted small">&copy; 2024 GoClean Santiago. Calidad y detalle.</p>
     </footer>
 
-    <!-- Botón WhatsApp Flotante -->
     <a href="https://wa.me/56912345678" class="floating-wa shadow">
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- Scripts de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
