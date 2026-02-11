@@ -3,74 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoClean Santiago | Limpieza Profunda de Tapices</title>
+    <title>GoClean Santiago | Servicios de Aseo Profesional</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome (Iconos) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        body { font-family: 'Open Sans', sans-serif; color: #333; }
+        :root {
+            --primary-blue: #3a7bd5; /* Azul del logo */
+            --primary-green: #5cb85c; /* Verde del logo */
+            --dark-text: #2c3e50;
+        }
+
+        body { font-family: 'Open Sans', sans-serif; color: var(--dark-text); }
         h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
 
-        /* Colores GoClean */
-        :root {
-            --primary-color: #007bff; /* Azul limpieza */
-            --secondary-color: #25d366; /* Verde WhatsApp */
-            --dark-blue: #003366;
+        .navbar-brand img {
+            max-height: 60px; /* Ajuste para que el logo se vea bien */
         }
 
         .hero {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1603615732591-e470c652907c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
-            height: 90vh;
+            height: 80vh;
             color: white;
             display: flex;
             align-items: center;
             text-align: center;
         }
 
-        .btn-whatsapp {
-            background-color: var(--secondary-color);
+        .btn-custom {
+            background-color: var(--primary-green);
             color: white;
             border-radius: 50px;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            text-decoration: none;
+            padding: 12px 30px;
+            font-weight: bold;
+            border: none;
             transition: 0.3s;
-            display: inline-block;
         }
 
-        .btn-whatsapp:hover {
-            background-color: #128c7e;
+        .btn-custom:hover {
+            background-color: var(--primary-blue);
             color: white;
-            transform: scale(1.05);
+            transform: translateY(-3px);
         }
 
         .service-card {
             border: none;
-            transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
         }
 
         .service-card:hover {
             transform: translateY(-10px);
         }
 
-        .before-after-section {
-            background-color: #f8f9fa;
+        .service-card img {
+            height: 220px;
+            object-fit: cover;
         }
+
+        .text-primary-custom { color: var(--primary-blue); }
+        .bg-light-section { background-color: #f8f9fa; }
 
         .floating-wa {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--secondary-color);
+            bottom: 30px;
+            right: 30px;
+            background-color: #25d366;
             color: white;
             width: 60px;
             height: 60px;
@@ -80,13 +86,8 @@
             align-items: center;
             font-size: 30px;
             z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-decoration: none;
         }
     </style>
 </head>
@@ -95,117 +96,97 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
         <div class="container">
-            <a class="navbar-brand fw-bold text-primary" href="#">GOCLEAN SANTIAGO</a>
+            <a class="navbar-brand" href="#">
+                <!-- Reemplaza logo.png por el nombre de tu archivo -->
+                <img src="logo.png" alt="GoClean Logo">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#nosotros">Por qué elegirnos</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-outline-primary ms-lg-3" href="https://wa.me/56912345678">Cotizar Ahora</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
+                    <li class="nav-item ms-lg-3"><a class="btn btn-outline-primary" href="https://wa.me/56912345678">Agendar Online</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <header class="hero">
         <div class="container">
-            <h1 class="display-3 mb-3">Tus sofás y alfombras como nuevos</h1>
-            <p class="lead mb-5">Limpieza profunda y sanitización a domicilio en todo Santiago. Eliminamos manchas, ácaros y malos olores.</p>
-            <a href="https://wa.me/56912345678?text=Hola!%20Me%20gustaría%20cotizar%20una%20limpieza" class="btn-whatsapp">
-                <i class="fab fa-whatsapp"></i> Cotizar por WhatsApp
-            </a>
+            <h1 class="display-4 mb-3">Limpieza Profesional con Sello de Calidad</h1>
+            <p class="lead mb-4">Especialistas en aseo profundo y mantención de espacios en todo Santiago.</p>
+            <a href="https://wa.me/56912345678" class="btn btn-custom btn-lg">Cotizar por WhatsApp</a>
         </div>
     </header>
 
     <!-- Servicios -->
     <section id="servicios" class="py-5">
-        <div class="container text-center">
-            <h2 class="mb-5">Nuestros Servicios</h2>
-            <div class="row">
-                <!-- Servicio 1 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card service-card h-100">
-                        <img src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Limpieza de Sofás">
-                        <div class="card-body">
-                            <h5 class="card-title">Limpieza de Sofás</h5>
-                            <p class="card-text">Eliminamos manchas de comida, mascotas y suciedad acumulada en todo tipo de telas.</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Servicio 2 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card service-card h-100">
-                        <img src="https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Limpieza de Colchones">
-                        <div class="card-body">
-                            <h5 class="card-title">Sanitización de Colchones</h5>
-                            <p class="card-text">Tratamiento profundo contra ácaros y bacterias para un descanso realmente saludable.</p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Servicio 3 -->
-                <div class="col-md-4 mb-4">
-                    <div class="card service-card h-100">
-                        <img src="https://images.unsplash.com/photo-1603584173870-7f3ca99a4741?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Detallado Automotriz">
-                        <div class="card-body">
-                            <h5 class="card-title">Interior de Vehículos</h5>
-                            <p class="card-text">Limpieza de butacas, alfombras y techo. Devolvemos el olor a nuevo a tu auto.</p>
-                        </div>
-                    </div>
-                </div>
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5">Nuestros Servicios</h2>
+                <div class="mx-auto" style="width: 80px; height: 4px; background: var(--primary-green);"></div>
             </div>
-        </div>
-    </section>
 
-    <!-- Beneficios -->
-    <section id="nosotros" class="py-5 before-after-section">
-        <div class="container text-center">
-            <h2 class="mb-5 text-primary">¿Por qué GoClean?</h2>
-            <div class="row">
-                <div class="col-md-3">
-                    <i class="fas fa-shining feature-icon"></i>
-                    <h4>Tecnología Pro</h4>
-                    <p>Inyección y succión profunda de última generación.</p>
+            <div class="row g-4">
+                <!-- Servicio 1: Casas alto metraje -->
+                <div class="col-md-4">
+                    <div class="card service-card h-100">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Aseo casas grandes">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold text-primary-custom">Aseo Profundo Casas de Alto Metraje</h5>
+                            <p class="card-text text-muted">Servicio especializado para residencias extensas que requieren atención en cada detalle. Realizamos limpieza técnica de ventanales, muros, cielos y sanitización profunda de áreas comunes, asegurando un estándar hotelero en hogares de gran escala.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <i class="fas fa-leaf feature-icon"></i>
-                    <h4>Bio-Degradable</h4>
-                    <p>Productos seguros para niños y mascotas.</p>
+
+                <!-- Servicio 2: Post Remodelación -->
+                <div class="col-md-4">
+                    <div class="card service-card h-100">
+                        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6958?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Aseo post remodelación">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold text-primary-custom">Aseo Post Remodelación</h5>
+                            <p class="card-text text-muted">Eliminamos el rastro de la obra. Nos encargamos del polvo fino, restos de pintura, siliconas y escombros ligeros. Dejamos tu propiedad impecable y lista para ser habitada inmediatamente después de tu proyecto de construcción.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <i class="fas fa-clock feature-icon"></i>
-                    <h4>Secado Rápido</h4>
-                    <p>Técnicas que optimizan el tiempo de uso de tus muebles.</p>
-                </div>
-                <div class="col-md-3">
-                    <i class="fas fa-home feature-icon"></i>
-                    <h4>A Domicilio</h4>
-                    <p>Llevamos el servicio a tu casa u oficina en toda la RM.</p>
+
+                <!-- Servicio 3: Lavado de Alfombras -->
+                <div class="col-md-4">
+                    <div class="card service-card h-100">
+                        <img src="https://images.unsplash.com/photo-1558317374-067fb5f30001?auto=format&fit=crop&w=600&q=80" class="card-img-top" alt="Lavado de alfombras">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold text-primary-custom">Lavado Industrial de Alfombras</h5>
+                            <p class="card-text text-muted">Recuperamos la vida de tus alfombras y cubrepisos. Utilizamos sistema de inyección y extracción profunda que elimina manchas rebeldes, bacterias y olores orgánicos, devolviendo la suavidad y el color original a las fibras.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="py-4 bg-dark text-white text-center">
-        <div class="container">
-            <p class="mb-1 fw-bold">GoClean Santiago</p>
-            <p class="small text-muted mb-3">Síguenos en Instagram @goclean_santiago</p>
-            <div class="social-links mb-3">
-                <a href="https://instagram.com/goclean_santiago" class="text-white mx-2"><i class="fab fa-instagram fa-2x"></i></a>
+    <footer class="py-5 bg-light-section">
+        <div class="container text-center">
+            <img src="logo.png" alt="GoClean Santiago" class="mb-4" style="height: 80px;">
+            <p class="mb-2"><strong>GoClean Santiago</strong> - Expertos en Limpieza Técnica</p>
+            <p class="text-muted mb-4">Atención en todas las comunas de la Región Metropolitana</p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="https://instagram.com/goclean_santiago" class="fs-3 text-dark"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/56912345678" class="fs-3 text-success"><i class="fab fa-whatsapp"></i></a>
             </div>
-            <p class="small">&copy; 2023 Todos los derechos reservados.</p>
+            <hr class="my-4">
+            <p class="small text-muted">&copy; 2024 GoClean Santiago. Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <!-- WhatsApp Flotante -->
-    <a href="https://wa.me/56912345678" class="floating-wa text-white">
+    <!-- Botón WhatsApp Flotante -->
+    <a href="https://wa.me/56912345678" class="floating-wa shadow">
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
