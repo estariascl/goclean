@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoClean Santiago | Limpieza Profunda de Tapices</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome (Iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Open Sans', sans-serif; color: #333; }
+        h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
+
+        /* Colores GoClean */
+        :root {
+            --primary-color: #007bff; /* Azul limpieza */
+            --secondary-color: #25d366; /* Verde WhatsApp */
+            --dark-blue: #003366;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 90vh;
+            color: white;
+            display: flex;
+            align-items: center;
+            text-align: center;
+        }
+
+        .btn-whatsapp {
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #128c7e;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .service-card {
+            border: none;
+            transition: 0.3s;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .before-after-section {
+            background-color: #f8f9fa;
+        }
+
+        .floating-wa {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--secondary-color);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary" href="#">GOCLEAN SANTIAGO</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#servicios">Servicios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#nosotros">Por qué elegirnos</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-outline-primary ms-lg-3" href="https://wa.me/56912345678">Cotizar Ahora</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container">
+            <h1 class="display-3 mb-3">Tus sofás y alfombras como nuevos</h1>
+            <p class="lead mb-5">Limpieza profunda y sanitización a domicilio en todo Santiago. Eliminamos manchas, ácaros y malos olores.</p>
+            <a href="https://wa.me/56912345678?text=Hola!%20Me%20gustaría%20cotizar%20una%20limpieza" class="btn-whatsapp">
+                <i class="fab fa-whatsapp"></i> Cotizar por WhatsApp
+            </a>
+        </div>
+    </header>
+
+    <!-- Servicios -->
+    <section id="servicios" class="py-5">
+        <div class="container text-center">
+            <h2 class="mb-5">Nuestros Servicios</h2>
+            <div class="row">
+                <!-- Servicio 1 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card service-card h-100">
+                        <img src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Limpieza de Sofás">
+                        <div class="card-body">
+                            <h5 class="card-title">Limpieza de Sofás</h5>
+                            <p class="card-text">Eliminamos manchas de comida, mascotas y suciedad acumulada en todo tipo de telas.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Servicio 2 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card service-card h-100">
+                        <img src="https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Limpieza de Colchones">
+                        <div class="card-body">
+                            <h5 class="card-title">Sanitización de Colchones</h5>
+                            <p class="card-text">Tratamiento profundo contra ácaros y bacterias para un descanso realmente saludable.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Servicio 3 -->
+                <div class="col-md-4 mb-4">
+                    <div class="card service-card h-100">
+                        <img src="https://images.unsplash.com/photo-1603584173870-7f3ca99a4741?auto=format&fit=crop&w=500&q=80" class="card-img-top" alt="Detallado Automotriz">
+                        <div class="card-body">
+                            <h5 class="card-title">Interior de Vehículos</h5>
+                            <p class="card-text">Limpieza de butacas, alfombras y techo. Devolvemos el olor a nuevo a tu auto.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beneficios -->
+    <section id="nosotros" class="py-5 before-after-section">
+        <div class="container text-center">
+            <h2 class="mb-5 text-primary">¿Por qué GoClean?</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <i class="fas fa-shining feature-icon"></i>
+                    <h4>Tecnología Pro</h4>
+                    <p>Inyección y succión profunda de última generación.</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-leaf feature-icon"></i>
+                    <h4>Bio-Degradable</h4>
+                    <p>Productos seguros para niños y mascotas.</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-clock feature-icon"></i>
+                    <h4>Secado Rápido</h4>
+                    <p>Técnicas que optimizan el tiempo de uso de tus muebles.</p>
+                </div>
+                <div class="col-md-3">
+                    <i class="fas fa-home feature-icon"></i>
+                    <h4>A Domicilio</h4>
+                    <p>Llevamos el servicio a tu casa u oficina en toda la RM.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-4 bg-dark text-white text-center">
+        <div class="container">
+            <p class="mb-1 fw-bold">GoClean Santiago</p>
+            <p class="small text-muted mb-3">Síguenos en Instagram @goclean_santiago</p>
+            <div class="social-links mb-3">
+                <a href="https://instagram.com/goclean_santiago" class="text-white mx-2"><i class="fab fa-instagram fa-2x"></i></a>
+            </div>
+            <p class="small">&copy; 2023 Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Flotante -->
+    <a href="https://wa.me/56912345678" class="floating-wa text-white">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
