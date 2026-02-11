@@ -3,239 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoClean Santiago | Cotizador de Limpieza</title>
-    <!-- Bootstrap 5 CSS -->
+    <title>GoClean Santiago | Limpieza Profunda y Detalle</title>
+    <!-- Bootstrap 5 & Fuentes -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
             --primary-blue: #3a7bd5;
             --primary-green: #5cb85c;
-            --bg-gray: #f7f9fc;
+            --dark-blue: #1e3c72;
+            --light-bg: #f4f7f9;
         }
 
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-gray); color: #333; }
-        h1, h2, h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; }
+        body { font-family: 'Inter', sans-serif; color: #333; scroll-behavior: smooth; }
+        h1, h2, h3, .navbar-brand { font-family: 'Montserrat', sans-serif; }
 
+        .navbar { background: white; border-bottom: 2px solid var(--light-bg); }
         .navbar-brand img { max-height: 60px; }
 
-        /* Estilo del Formulario extraído */
-        .calculator-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
-            padding: 40px;
-            margin-top: -50px;
-            position: relative;
-            z-index: 10;
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover; background-position: center;
+            height: 75vh; color: white; display: flex; align-items: center; text-align: center;
         }
 
-        .hero-mini {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1581578731548-c64695cc6958?auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
+        .btn-whatsapp {
+            background-color: var(--primary-green); color: white; border-radius: 50px;
+            padding: 15px 35px; font-weight: 700; text-decoration: none; display: inline-block;
+            transition: 0.3s; border: none; font-size: 1.1rem;
         }
+        .btn-whatsapp:hover { background-color: #4cae4c; transform: translateY(-3px); color: white; }
 
-        .form-label { font-weight: 600; font-size: 0.9rem; color: #444; }
+        .service-card {
+            border: none; border-radius: 20px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: 0.3s; height: 100%;
+        }
+        .service-card:hover { transform: translateY(-10px); }
+        .service-card img { height: 250px; object-fit: cover; }
+
+        .quote-section { background-color: var(--light-bg); padding: 80px 0; }
+        .calculator-card {
+            background: white; border-radius: 25px; padding: 45px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1); border-top: 5px solid var(--primary-blue);
+        }
+        .form-label { font-weight: 600; font-size: 0.85rem; color: #555; text-transform: uppercase; }
         .form-control, .form-select {
-            border: 1px solid #e1e5eb;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 5px;
+            border-radius: 10px; padding: 12px; border: 1px solid #ddd; background: #fafafa;
         }
 
-        .checkbox-group {
-            background: #fdfdfd;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 15px;
-        }
-
-        .btn-submit {
-            background-color: var(--primary-green);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-weight: 700;
-            width: 100%;
-            font-size: 1.1rem;
-            transition: 0.3s;
-            margin-top: 20px;
-        }
-
-        .btn-submit:hover {
-            background-color: var(--primary-blue);
-            transform: translateY(-2px);
-        }
-
+        footer { background: #1a1a1a; color: white; padding: 60px 0; }
         .floating-wa {
-            position: fixed; bottom: 30px; right: 30px;
-            background-color: #25d366; color: white;
-            width: 60px; height: 60px; border-radius: 50%;
+            position: fixed; bottom: 30px; right: 30px; background-color: #25d366;
+            color: white; width: 65px; height: 65px; border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            font-size: 30px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-size: 35px; z-index: 1000; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             text-decoration: none;
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#"><img src="logo.png" alt="GoClean Santiago"></a>
+            <a class="navbar-brand" href="#"><img src="logo.png" alt="GoClean"></a>
+            <div class="ms-auto d-none d-lg-block">
+                <a href="#cotizar" class="btn btn-primary rounded-pill px-4 fw-bold">Presupuesto Online</a>
+            </div>
         </div>
     </nav>
 
-    <header class="hero-mini">
+    <!-- Hero Section -->
+    <header class="hero">
         <div class="container">
-            <h1 class="display-5">Calcular Tu Costo de Limpieza</h1>
-            <p>Obtén un presupuesto detallado según tus necesidades específicas</p>
+            <h1 class="display-3 fw-bold mb-3">Limpieza de Alto Nivel</h1>
+            <p class="lead mb-5 fs-4">Expertos en grandes superficies y sanitización profunda en Santiago.</p>
+            <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+                <a href="https://wa.me/56912345678" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp Directo</a>
+                <!-- CAMBIO: Texto de Ver Tarifa a Cotizar -->
+                <a href="#cotizar" class="btn btn-light btn-lg rounded-pill px-5 fw-bold text-primary">Cotizar</a>
+            </div>
         </div>
     </header>
 
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10">
-                <div class="calculator-container">
-                    
-                    <!-- FORMULARIO CONFIGURADO PARA ENVÍO -->
-                    <form action="https://formsubmit.co/TU_CORREO@DOMINIO.COM" method="POST">
-                        
-                        <!-- Configuración FormSubmit -->
-                        <input type="hidden" name="_subject" value="Nueva Solicitud de Presupuesto - GoClean Santiago">
-                        <input type="hidden" name="_captcha" value="false">
-
-                        <div class="row g-3">
-                            <!-- Datos Personales -->
-                            <div class="col-md-4">
-                                <label class="form-label">Nombre y Apellido*</label>
-                                <input type="text" name="your-name" class="form-control" placeholder="Juan Pérez" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Email*</label>
-                                <input type="email" name="email-cliente" class="form-control" placeholder="nombre@correo.com" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Teléfono*</label>
-                                <input type="tel" name="your-tel" class="form-control" placeholder="+569..." required>
-                            </div>
-
-                            <!-- Detalles de Propiedad -->
-                            <div class="col-md-4">
-                                <label class="form-label">Propiedad*</label>
-                                <select name="your-propiedad" class="form-select" required>
-                                    <option value="">Seleccionar...</option>
-                                    <option value="Casa">Casa</option>
-                                    <option value="Casa nueva (sin uso)">Casa nueva (sin uso)</option>
-                                    <option value="Departamento">Departamento</option>
-                                    <option value="Departamento nuevo (sin uso)">Departamento nuevo (sin uso)</option>
-                                    <option value="Oficina">Oficina</option>
-                                    <option value="Tienda">Tienda</option>
-                                    <option value="Centro médico">Centro médico</option>
-                                    <option value="Local Comercial">Local Comercial</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Estado de propiedad*</label>
-                                <select name="your-estado" class="form-select" required>
-                                    <option value="">Seleccionar...</option>
-                                    <option value="Habitada">Habitada</option>
-                                    <option value="Desocupada">Desocupada</option>
-                                    <option value="Post remodelación (Habitada)">Post remodelación (Habitada)</option>
-                                    <option value="Post remodelación (Desocupada)">Post remodelación (Desocupada)</option>
-                                    <option value="Post arriendatario (Desocupada)">Post arriendatario (Desocupada)</option>
-                                    <option value="Nueva (sin uso, artefactos nuevos)">Nueva (sin uso, artefactos nuevos)</option>
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Metros cuadrados*</label>
-                                <select name="your-metros" class="form-select" required>
-                                    <option value="">Seleccionar...</option>
-                                    <option value="30m²">30m²</option><option value="40m²">40m²</option><option value="50m²">50m²</option>
-                                    <option value="60m²">60m²</option><option value="70m²">70m²</option><option value="80m²">80m²</option>
-                                    <option value="90m²">90m²</option><option value="100m²">100m²</option><option value="150m²">150m²</option>
-                                    <option value="200m²">200m²</option><option value="300m²">300m²</option><option value="Más de 500m²">Más de 500m²</option>
-                                </select>
-                            </div>
-
-                            <!-- Habitaciones / Baños -->
-                            <div class="col-md-3">
-                                <label class="form-label">Dormitorios*</label>
-                                <select name="your-habitaciones" class="form-select" required>
-                                    <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-                                    <option value="4">4</option><option value="5">5</option><option value="más de 15">Más de 15</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Baños*</label>
-                                <select name="your-banos" class="form-select" required>
-                                    <option value="1">1</option><option value="2">2</option><option value="3">3</option>
-                                    <option value="4">4</option><option value="más de 10">Más de 10</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Salas de Estar</label>
-                                <select name="your-salasestar" class="form-select">
-                                    <option value="0">0</option><option value="1">1</option><option value="2">2</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Comuna*</label>
-                                <input type="text" name="your-comuna" class="form-control" placeholder="Ej: Providencia" required>
-                            </div>
+    <!-- Sección de Servicios -->
+    <section id="servicios" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold">Nuestra Especialidad</h2>
+                <p class="text-muted">Equipamiento industrial para resultados garantizados</p>
+            </div>
+            <div class="row g-4">
+                <!-- Servicio 1 -->
+                <div class="col-md-4">
+                    <div class="card service-card">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Casas Grandes">
+                        <div class="card-body p-4">
+                            <h4 class="fw-bold">Casas de Alto Metraje</h4>
+                            <p class="text-muted">Aseo técnico exhaustivo para residencias que requieren cuidado en molduras, rieles de ventanales y doble altura.</p>
                         </div>
-
-                        <!-- Checkboxes Servicios adicionales -->
-                        <div class="checkbox-group mt-4">
-                            <label class="form-label d-block mb-3 text-primary">Servicios Adicionales Requeridos:</label>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Limpieza profunda"><label class="form-check-label">Limpieza profunda</label></div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Limpieza de vidrios"><label class="form-check-label">Limpieza de vidrios</label></div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Limpieza de tapices"><label class="form-check-label">Limpieza de tapices</label></div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Lavado de alfombras"><label class="form-check-label">Lavado de alfombras</label></div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Pulido de pisos"><label class="form-check-label">Pulido de pisos</label></div>
-                                    <div class="form-check"><input class="form-check-input" type="checkbox" name="servicios[]" value="Limpieza de quincho"><label class="form-check-label">Quincho y parrilla</label></div>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <!-- Servicio 2: CAMBIO DE IMAGEN POST REMODELACIÓN -->
+                <div class="col-md-4">
+                    <div class="card service-card border-primary" style="border-top: 5px solid var(--primary-blue) !important;">
+                        <img src="https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&w=800&q=80" alt="Aseo Post Obra">
+                        <div class="card-body p-4">
+                            <h4 class="fw-bold">Aseo Post Remodelación</h4>
+                            <p class="text-muted">Eliminamos el polvo fino y restos de obra con equipo de succión HEPA. Dejamos tu espacio impecable tras la construcción.</p>
                         </div>
-
-                        <div class="row mt-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Fecha propuesta</label>
-                                <input type="text" name="your-fecha" class="form-control" placeholder="DD/MM/AAAA">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Comentarios</label>
-                                <textarea name="comentarios" class="form-control" rows="1" placeholder="Información adicional..."></textarea>
-                            </div>
+                    </div>
+                </div>
+                <!-- Servicio 3: CAMBIO DE IMAGEN TAPICES Y ALFOMBRAS -->
+                <div class="col-md-4">
+                    <div class="card service-card">
+                        <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80" alt="Lavado Alfombras">
+                        <div class="card-body p-4">
+                            <h4 class="fw-bold">Tapices y Alfombras</h4>
+                            <p class="text-muted">Sistema de inyección y extracción de alto poder. Eliminamos manchas profundas, bacterias y ácaros de tus muebles.</p>
                         </div>
-
-                        <button type="submit" class="btn-submit">COTIZAR AHORA</button>
-
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <footer class="py-5 text-center mt-5">
-        <p class="text-muted small">&copy; 2024 GoClean Santiago. Calidad y detalle.</p>
+    <!-- Sección de Cotización -->
+    <section id="cotizar" class="quote-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="calculator-card">
+                        <div class="text-center mb-5">
+                            <h2 class="fw-bold">Solicitud de Presupuesto</h2>
+                            <p class="text-muted">Completa los detalles técnicos para recibir una cotización formal en tu correo.</p>
+                        </div>
+
+                        <form action="https://formsubmit.co/TU_CORREO@EMAIL.COM" method="POST">
+                            <input type="hidden" name="_subject" value="Nueva Cotización GoClean Santiago">
+                            <input type="hidden" name="_captcha" value="false">
+
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Nombre y Apellido*</label>
+                                    <input type="text" name="Nombre" class="form-control" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Email*</label>
+                                    <input type="email" name="Email" class="form-control" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Teléfono*</label>
+                                    <input type="tel" name="Telefono" class="form-control" required>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <label class="form-label">Propiedad*</label>
+                                    <select name="Propiedad" class="form-select" required>
+                                        <option value="Casa">Casa</option>
+                                        <option value="Departamento">Departamento</option>
+                                        <option value="Oficina">Oficina</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Estado*</label>
+                                    <select name="Estado" class="form-select" required>
+                                        <option value="Habitada">Habitada</option>
+                                        <option value="Post Remodelación">Post Remodelación</option>
+                                        <option value="Nueva/Vacía">Nueva / Desocupada</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Metraje aprox.*</label>
+                                    <input type="text" name="Metraje" class="form-control" placeholder="Ej: 120m2" required>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 p-3 border rounded bg-light">
+                                <label class="fw-bold mb-2 d-block">Servicios a incluir:</label>
+                                <div class="row">
+                                    <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" name="S_Vidrios" value="SI"><label class="form-check-label">Vidrios</label></div></div>
+                                    <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" name="S_Alfombras" value="SI"><label class="form-check-label">Alfombras</label></div></div>
+                                    <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" name="S_Tapices" value="SI"><label class="form-check-label">Tapices</label></div></div>
+                                    <div class="col-6 col-md-3"><div class="form-check"><input class="form-check-input" type="checkbox" name="S_Pisos" value="SI"><label class="form-check-label">Pisos</label></div></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 text-center">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 py-3 fw-bold w-100">ENVIAR COTIZACIÓN POR CORREO</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <img src="logo.png" alt="GoClean" class="mb-4" style="height: 70px;">
+            <p class="mb-4">Especialistas en Limpieza Técnica de Detalle</p>
+            <div class="d-flex justify-content-center gap-4">
+                <a href="https://instagram.com/goclean_santiago" class="text-white fs-3"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/56912345678" class="text-white fs-3"><i class="fab fa-whatsapp"></i></a>
+            </div>
+            <hr class="my-5 border-secondary">
+            <p class="small text-muted">&copy; 2024 GoClean Santiago. Todos los derechos reservados.</p>
+        </div>
     </footer>
 
+    <!-- WhatsApp Flotante -->
     <a href="https://wa.me/56912345678" class="floating-wa shadow">
         <i class="fab fa-whatsapp"></i>
     </a>
