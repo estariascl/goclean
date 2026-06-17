@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cotizador Profesional v6.5 - Go Clean</title>
+    
+    <!-- Fuente Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        .gc-scope {
+            --brand-blue: #3385d9; 
+            --brand-dark: #1e1b4b;
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --border: #e2e8f0;
+            --shadow: 0 10px 30px rgba(51, 133, 217, 0.12);
+            --danger: #ef4444;
+            
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            padding: 20px 15px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            background-color: var(--bg-page);
+            -webkit-tap-highlight-color: transparent;
+        }
+        .gc-scope * { box-sizing: border-box; }
+        .gc-form { background: var(--bg-card); padding: 30px 20px; border-radius: 32px; box-shadow: var(--shadow); max-width: 850px; width: 100%; border: 1px solid #f1f5f9; }
+        
+        .gc-logo-header { display: block; max-height: 90px; width: auto; margin: 0 auto 1.5rem auto; }
+        .gc-form-header { text-align: center; margin-bottom: 30px; }
+        .gc-title { margin: 0; color: var(--brand-blue); font-size: 26px; font-weight: 900; letter-spacing: -0.8px; }
+        
+        .gc-section { margin-bottom: 35px; padding-top: 25px; border-top: 1px solid var(--border); }
+        .gc-section-label { 
+            display: inline-block; font-size: 11px; font-weight: 800; text-transform: uppercase; 
+            letter-spacing: 1.5px; color: var(--brand-blue); background: #eff6ff; 
+            padding: 4px 12px; border-radius: 8px; margin-bottom: 20px;
+        }
+
+        .gc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .gc-full { grid-column: span 2; }
+        
+        .gc-group label { display: block; font-size: 13px; font-weight: 700; color: var(--brand-blue); margin-bottom: 8px; }
+        .gc-input, .gc-select, .gc-textarea { width: 100%; padding: 14px 15px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 16px; transition: 0.2s; color: #1f2937; background: #fff; }
+        .gc-input:focus, .gc-select:focus { border-color: var(--brand-blue); outline: none; box-shadow: 0 0 0 4px rgba(51, 133, 217, 0.1); }
+        
+        /* Controles Toggle */
+        .gc-toggle-card {
+            background: #f1f5f9; padding: 22px; border-radius: 20px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; border: 2px solid transparent; 
+            display: flex; align-items: center; justify-content: space-between; gap: 15px;
+        }
+        .gc-toggle-card.active { border-color: var(--brand-blue); background: #eff6ff; box-shadow: 0 8px 20px rgba(51, 133, 217, 0.08); }
+        .gc-toggle-info { flex: 1; }
+        .gc-toggle-info h4 { margin: 0; font-size: 17px; font-weight: 800; color: var(--brand-blue); }
+        .gc-toggle-info p { margin: 4px 0 0; font-size: 12px; color: #64748b; line-height: 1.4; }
+
+        .gc-switch-container { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+        .gc-switch-track { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px; }
+        .gc-switch-track:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        input:checked + .gc-switch-track { background-color: var(--brand-blue); }
+        input:checked + .gc-switch-track:before { transform: translateX(20px); }
+
+        .gc-conditional-content { display: none; margin-top: -10px; margin-bottom: 25px; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Selectores Numéricos Mejorados */
+        .gc-num-selector { display: flex; flex-wrap: wrap; gap: 8px; }
+        .gc-num-selector label { flex: 1; min-width: 40px; margin: 0; cursor: pointer; }
+        .gc-num-selector input { display: none; }
+        .gc-num-selector span { 
+            display: block; padding: 12px 8px; background: #fff; border: 1.5px solid var(--border); text-align: center; 
+            border-radius: 12px; font-weight: 800; font-size: 14px; color: #475569; transition: 0.2s; 
+        }
+        .gc-num-selector input:checked + span { background-color: var(--brand-blue); color: #fff; border-color: var(--brand-blue); }
+
+        /* Grid de Opciones (Estados) */
+        .gc-option-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .gc-option-item input { display: none; }
+        .gc-option-item span { 
+            display: flex; align-items: center; justify-content: center; padding: 14px; 
+            background: #fff; border: 1.5px solid var(--border); border-radius: 14px; 
+            font-size: 13px; font-weight: 700; color: #475569; text-align: center; cursor: pointer; transition: 0.2s; 
+            min-height: 60px; width: 100%;
+        }
+        .gc-option-item input:checked + span { border-color: var(--brand-blue); background: #eff6ff; color: var(--brand-blue); }
+
+        /* Servicios Especializados (UNA COLUMNA) */
+        .gc-specialized-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+        .gc-specialized-wrapper { display: flex; flex-direction: column; }
+
+        .gc-sub-option { display: none; margin-top: 10px; padding: 20px; background: #f8fafc; border-radius: 20px; border: 1.5px solid var(--border); }
+        .gc-sub-title { display: block; font-size: 11px; font-weight: 900; color: var(--brand-dark); margin-bottom: 15px; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; letter-spacing: 0.5px; }
+
+        .gc-list-item { background: #fff; border: 1px solid var(--border); padding: 12px 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: 700; }
+        .gc-list-item button { color: var(--danger); font-weight: 900; border: none; background: none; cursor: pointer; }
+
+        /* Carga de Imágenes */
+        .gc-upload-card { 
+            position: relative; background: #fff; border: 2px dashed var(--border); border-radius: 24px; padding: 24px; 
+            text-align: center; cursor: pointer; min-height: 140px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; transition: 0.2s; 
+        }
+        .gc-upload-card:hover { border-color: var(--brand-blue); background: #f8fbff; }
+        .gc-upload-icon { width: 36px; height: 36px; color: #cbd5e1; margin-bottom: 12px; }
+        .gc-upload-label { font-size: 15px; font-weight: 800; color: var(--brand-dark); }
+        .gc-file-hidden { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 10; }
+        
+        .gc-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; margin-top: 15px; }
+        .gc-preview-item { position: relative; aspect-ratio: 1; border-radius: 14px; overflow: hidden; border: 1.5px solid var(--border); }
+        .gc-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        .gc-btn { width: 100%; margin-top: 25px; padding: 22px; border: none; border-radius: 20px; background: var(--brand-blue); color: #fff; font-weight: 900; font-size: 18px; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(51, 133, 217, 0.25); }
+        .gc-btn-secondary { background: #fff; color: var(--brand-blue); border: 1.5px solid var(--brand-blue); padding: 12px; border-radius: 12px; font-size: 12px; font-weight: 800; width: 100%; margin-top: 10px; cursor: pointer; }
+        
+        /* Términos y Condiciones */
+        .gc-terms-row { display: flex; align-items: flex-start; gap: 12px; margin-top: 20px; padding: 0 5px; }
+        .gc-terms-row input { margin-top: 4px; width: 18px; height: 18px; cursor: pointer; }
+        .gc-terms-row label { font-size: 13px; color: var(--brand-blue); font-weight: 600; line-height: 1.4; cursor: pointer; }
+        .gc-terms-row a { color: var(--brand-dark); font-weight: 800; text-decoration: underline; }
+
+        .gc-helper-text { display: block; font-size: 10px; color: #64748b; margin-top: 4px; line-height: 1.4; font-weight: 500; }
+
+        @media (max-width: 640px) { .gc-grid { grid-template-columns: 1fr; } .gc-full { grid-column: span 1; } }
+    </style>
+</head>
+<body>
+
+<div class="gc-scope">
+    <form class="gc-form" id="gc-modular-form" method="POST" action="enviar-cotizacion.php" enctype="multipart/form-data" novalidate>
+        
+        <img src="go.jpeg" alt="Go Clean Logo" class="gc-logo-header">
+
+        <header class="gc-form-header">
+            <h2 class="gc-title">Personaliza tu Cotización ✨</h2>
+        </header>
+
+        <!-- Único Bloque de Error Principal (v6.4) -->
+        <div id="gc-error-message" style="display:none; background:#fef2f2; border:1px solid #fee2e2; color:#b91c1c; padding:18px; border-radius:16px; margin-bottom:25px; font-size:14px; font-weight:700; text-align:left; line-height:1.5;"></div>
+
+        <!-- 1. DATOS DE CONTACTO -->
+        <div style="margin-bottom: 30px;">
+            <span class="gc-section-label">1. Datos de Contacto</span>
+            <div class="gc-grid">
+                <div class="gc-group gc-full"><label>Nombre Completo*</label><input type="text" name="nombre_completo" id="nombre" class="gc-input" placeholder="Ej: Alejandro López" required></div>
+                <div class="gc-group"><label>Email*</label><input type="email" name="email" id="email" class="gc-input" placeholder="correo@ejemplo.com" required></div>
+                <div class="gc-group"><label>Teléfono / WhatsApp*</label><input type="tel" name="telefono" id="tel" class="gc-input" value="+569" required></div>
+                <div class="gc-group">
+                    <label>Comuna del Servicio*</label>
+                    <select name="comuna" id="comuna" class="gc-select" required>
+                        <option value="" disabled selected>Seleccionar comuna...</option>
+                        <option value="Buin">Buin</option><option value="Calera de Tango">Calera de Tango</option><option value="Chicureo-Chamisero">Chicureo-Chamisero</option><option value="Colina">Colina</option><option value="Curacaví">Curacaví</option><option value="Huechuraba">Huechuraba</option><option value="La Florida">La Florida</option><option value="La Reina">La Reina</option><option value="Las Condes">Las Condes</option><option value="Lo Barnechea">Lo Barnechea</option><option value="Macul">Macul</option><option value="Ñuñoa">Ñuñoa</option><option value="Paine">Paine</option><option value="Peñaflor">Peñaflor</option><option value="Peñalolén">Peñalolén</option><option value="Providencia">Providencia</option><option value="Puente Alto">Puente Alto</option><option value="San Joaquín">San Joaquín</option><option value="San Miguel">San Miguel</option><option value="Santiago Centro">Santiago Centro</option><option value="Talagante">Talagante</option><option value="Vitacura">Vitacura</option>
+                        <option value="" disabled>---</option>
+                        <option value="Cerrillos">Cerrillos</option><option value="Cerro Navia">Cerro Navia</option><option value="Conchalí">Conchalí</option><option value="El Bosque">El Bosque</option><option value="Estación Central">Estación Central</option><option value="Independencia">Independencia</option><option value="La Cisterna">La Cisterna</option><option value="La Granja">La Granja</option><option value="La Pintana">La Pintana</option><option value="Lo Espejo">Lo Espejo</option><option value="Lo Prado">Lo Prado</option><option value="Maipú">Maipú</option><option value="Pedro Aguirre Cerda">Pedro Aguirre Cerda</option><option value="Pudahuel">Pudahuel</option><option value="Quilicura">Quilicura</option><option value="Quinta Normal">Quinta Normal</option><option value="Recoleta">Recoleta</option><option value="Renca">Renca</option><option value="San Ramón">San Ramón</option>
+                    </select>
+                </div>
+                <div class="gc-group"><label>Fecha Propuesta*</label><input type="date" name="fecha_servicio" id="fecha" class="gc-input" required></div>
+            </div>
+        </div>
+
+        <!-- 2. SELECCIÓN DE SERVICIOS -->
+        <div class="gc-section">
+            <span class="gc-section-label">2. Selección de Servicios</span>
+            
+            <!-- LIMPIEZA INTEGRAL -->
+            <label class="gc-toggle-card" id="card-aseo">
+                <div class="gc-toggle-info"><h4>Limpieza Profunda / Integral</h4><p>Ideal para mudanzas, casas vacías o mantenimientos totales.</p></div>
+                <div class="gc-switch-container">
+                    <input type="checkbox" name="req_aseo" id="req-aseo" style="display:none">
+                    <span class="gc-switch-track"></span>
+                </div>
+            </label>
+
+            <div class="gc-conditional-content" id="content-aseo">
+                <div class="gc-grid">
+                    <div class="gc-group gc-full">
+                        <label>Metros Cuadrados Aproximados*</label>
+                        <input type="number" name="metros" id="metros" class="gc-input" placeholder="Ej: 120">
+                    </div>
+                    
+                    <!-- CAMBIO SOLICITADO: Dormitorios 1 a 7+ -->
+                    <div class="gc-group gc-full">
+                        <label>Dormitorios*</label>
+                        <div class="gc-num-selector">
+                            <label><input type="radio" name="dorm" value="1"><span>1</span></label>
+                            <label><input type="radio" name="dorm" value="2"><span>2</span></label>
+                            <label><input type="radio" name="dorm" value="3"><span>3</span></label>
+                            <label><input type="radio" name="dorm" value="4"><span>4</span></label>
+                            <label><input type="radio" name="dorm" value="5"><span>5</span></label>
+                            <label><input type="radio" name="dorm" value="6"><span>6</span></label>
+                            <label><input type="radio" name="dorm" value="7+"><span>7+</span></label>
+                        </div>
+                    </div>
+                    
+                    <div class="gc-group"><label>Baños*</label><div class="gc-num-selector"><label><input type="radio" name="banos" value="1"><span>1</span></label><label><input type="radio" name="banos" value="2"><span>2</span></label><label><input type="radio" name="banos" value="3"><span>3</span></label><label><input type="radio" name="banos" value="4+"><span>4+</span></label></div></div>
+                    <div class="gc-group"><label>Salas de Estar*</label><div class="gc-num-selector"><label><input type="radio" name="salas_estar" value="0"><span>0</span></label><label><input type="radio" name="salas_estar" value="1"><span>1</span></label><label><input type="radio" name="salas_estar" value="2"><span>2</span></label><label><input type="radio" name="salas_estar" value="3+"><span>3+</span></label></div></div>
+                    <div class="gc-group"><label>Comedores*</label><div class="gc-num-selector"><label><input type="radio" name="comedor" value="0"><span>0</span></label><label><input type="radio" name="comedor" value="1"><span>1</span></label><label><input type="radio" name="comedor" value="2"><span>2</span></label><label><input type="radio" name="comedor" value="3+"><span>3+</span></label></div></div>
+
+                    <div class="gc-group gc-full">
+                        <label>Estado de la Propiedad*</label>
+                        <div class="gc-option-grid">
+                            <label class="gc-option-item"><input type="radio" name="estado" value="Habitada"><span>🛋️ Habitada</span></label>
+                            <label class="gc-option-item"><input type="radio" name="estado" value="Desocupada"><span>🏠 Desocupada</span></label>
+                            <label class="gc-option-item"><input type="radio" name="estado" value="Post remodelación (Habitada)"><span>🔨 Post remodelación (Habitada)</span></label>
+                            <label class="gc-option-item"><input type="radio" name="estado" value="Post remodelación (Desocupada)"><span>🧹 Post remodelación (Desocupada)</span></label>
+                            <label class="gc-option-item"><input type="radio" name="estado" value="Post arrendatario"><span>🔑 Post arrendatario</span></label>
+                            <label class="gc-option-item"><input type="radio" name="estado" value="Nueva"><span>✨ Nueva</span></label>
+                        </div>
+                        <div id="obs-remodelacion-container" style="display:none; margin-top:15px;">
+                            <label style="color:var(--brand-blue); font-size:13px; font-weight:800;">Detalles Obra / Construcción*</label>
+                            <textarea name="obs_remodelacion" id="obs-remodelacion" class="gc-textarea" rows="2" placeholder="Describa el nivel de polvo, restos de pintura, etc."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SERVICIOS ESPECIALIZADOS (UNA COLUMNA) -->
+            <label class="gc-toggle-card" id="card-especial">
+                <div class="gc-toggle-info"><h4>Servicios Especializados</h4><p>Servicios técnicos específicos: Vidrios, Alfombras, Tapices, etc.</p></div>
+                <div class="gc-switch-container">
+                    <input type="checkbox" name="req_especial" id="req-especial" style="display:none">
+                    <span class="gc-switch-track"></span>
+                </div>
+            </label>
+
+            <div class="gc-conditional-content" id="content-especial">
+                <div class="gc-specialized-grid">
+                    
+                    <div class="gc-specialized-wrapper">
+                        <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Limpieza de vidrios" id="chk-vidrios"><span>Limpieza de vidrios</span></label>
+                        <div class="gc-sub-option" id="vidrios-container">
+                            <span class="gc-sub-title">Detalle de Ventanas</span>
+                            <div class="gc-grid">
+                                <div class="gc-group"><label>Cant. Ventanas*</label><input type="number" name="qty_ventanas" class="gc-input" placeholder="Ej: 5"><span class="gc-helper-text">Nota: 2 paños = 1 ventana</span></div>
+                                <div class="gc-group"><label>Cant. Ventanales*</label><input type="number" name="qty_ventanales" class="gc-input" placeholder="Ej: 2"><span class="gc-helper-text">Nota: 2 hojas = 1 ventanal</span></div>
+                                <div class="gc-group gc-full">
+                                    <label>Tipo Propiedad*</label>
+                                    <div class="gc-option-grid">
+                                        <label class="gc-option-item"><input type="radio" name="tipo_prop_vidrio" value="Casa" id="radio-casa"><span>🏠 Casa</span></label>
+                                        <label class="gc-option-item"><input type="radio" name="tipo_prop_vidrio" value="Departamento" id="radio-depto"><span>🏢 Depto</span></label>
+                                    </div>
+                                </div>
+                                <div id="casa-pisos-container" class="gc-group gc-full" style="display:none">
+                                    <label>Pisos de la casa*</label>
+                                    <div class="gc-num-selector" style="max-width: 250px;">
+                                        <label><input type="radio" name="qty_pisos" value="1"><span>1</span></label><label><input type="radio" name="qty_pisos" value="2"><span>2</span></label><label><input type="radio" name="qty_pisos" value="3"><span>3</span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gc-specialized-wrapper">
+                        <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Lavado de alfombras" id="chk-alfombras"><span>Lavado de alfombras</span></label>
+                        <div class="gc-sub-option" id="alfombras-container">
+                            <span class="gc-sub-title">Lista de Alfombras (Máx 5)</span>
+                            <div id="carpet-list"></div>
+                            <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                                <div class="gc-grid">
+                                    <div class="gc-group"><label>Material</label><select id="temp-carpet-material" class="gc-select"><option value="Yute">Yute</option><option value="Sintética">Sintética</option><option value="Lana">Lana</option></select></div>
+                                    <div class="gc-group"><label>Dimensiones</label><input type="text" id="temp-carpet-dim" class="gc-input" placeholder="Ej: 2x3 mts"></div>
+                                </div>
+                                <button type="button" class="gc-btn-secondary" onclick="addCarpet()">+ Agregar a la lista</button>
+                            </div>
+                            <input type="hidden" name="detalle_alfombras_json" id="alfombras-json">
+                        </div>
+                    </div>
+
+                    <div class="gc-specialized-wrapper">
+                        <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Limpieza de tapices" id="chk-tapices"><span>Limpieza de tapices</span></label>
+                        <div class="gc-sub-option" id="tapices-container">
+                            <span class="gc-sub-title">Detalles de Tapiz</span>
+                            <div class="gc-grid">
+                                <div class="gc-group"><label>Mueble*</label><select name="mueble_tapiz" class="gc-select"><option value="" disabled selected>Elegir...</option><option value="Sofá">Sofá</option><option value="Butaca">Butaca</option><option value="Sillas">Sillas comedor</option></select></div>
+                                <div class="gc-group"><label>Tipo de Tela*</label><input type="text" name="tela_tapiz" class="gc-input" placeholder="Ej: Lino, Felpa..."></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gc-specialized-wrapper">
+                        <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Pulido de pisos" id="chk-pulido"><span>Pulido de pisos</span></label>
+                        <div class="gc-sub-option" id="pulido-container">
+                            <label>Superficie a Tratar*</label>
+                            <select name="tipo_piso_pulido" class="gc-select">
+                                <option value="" disabled selected>Seleccionar material...</option><option value="Flotante">Piso Flotante</option><option value="Parquet">Piso de Parquet</option><option value="Porcelanato">Porcelanato / Cerámica</option></select>
+                        </div>
+                    </div>
+
+                    <div class="gc-specialized-wrapper">
+                        <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Limpieza de colchones" id="chk-colchones"><span>Limpieza de colchones</span></label>
+                        <div class="gc-sub-option" id="colchones-container">
+                            <span class="gc-sub-title">Lista de Colchones (Máx 5)</span>
+                            <div id="mattress-list"></div>
+                            <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                                <div class="gc-grid">
+                                    <div class="gc-group"><label>Tamaño</label><select id="temp-size" class="gc-select"><option value="1 Plaza">1 Plaza</option><option value="2 Plazas">2 Plazas</option><option value="King/S. King">King / S. King</option></select></div>
+                                    <div class="gc-group"><label>Cant.</label><input type="number" id="temp-qty" class="gc-input" value="1"></div>
+                                </div>
+                                <button type="button" class="gc-btn-secondary" onclick="addMattress()">+ Agregar a la lista</button>
+                            </div>
+                            <input type="hidden" name="detalle_colchones_json" id="colchones-json">
+                        </div>
+                    </div>
+
+                    <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Limpieza Locales Comerciales" id="chk-locales"><span>Locales Comerciales</span></label>
+                    <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Limpieza de quincho" id="chk-quincho"><span>Limpieza de quincho</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. DETALLES FINALES -->
+        <div class="gc-section">
+            <span class="gc-section-label">3. Detalles Finales</span>
+            <div class="gc-grid">
+                <div class="gc-group gc-full">
+                    <label>Imágenes de Referencia (Sugerido)</label>
+                    <div class="gc-upload-card">
+                        <svg class="gc-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7M16 5l2 2 4-4M21 11.5l-6.446-4.444a.5.5 0 0 0-.554 0L8 12M21 19l-5.336-4a.5.5 0 0 0-.596 0L5 21"/></svg>
+                        <span class="gc-upload-label">Subir imágenes (Máximo 5)</span>
+                        <input type="file" name="fotos_referencia[]" id="fotos" class="gc-file-hidden" accept="image/*" multiple>
+                    </div>
+                    <div class="gc-preview-grid" id="preview"></div>
+                </div>
+                <div class="gc-group gc-full"><label>Comentarios Adicionales</label><textarea name="comentarios" class="gc-textarea" rows="3" placeholder="Información técnica adicional..."></textarea></div>
+            </div>
+            
+            <div class="gc-terms-row">
+                <input type="checkbox" id="terms" required>
+                <label for="terms">He leído y acepto los <a href="Términos y Condiciones de Tratamiento de Datos Personales.pdf" target="_blank">Términos y Condiciones de Tratamiento de Datos Personales</a> de Go Clean Santiago.</label>
+            </div>
+        </div>
+
+        <button type="submit" class="gc-btn" id="gc-submit">Enviar Solicitud de Cotización</button>
+    </form>
+</div>
+
+<script>
+    // Sistema único de errores en el bloque superior (v6.4)
+    const showError = (errs) => {
+        const errorBox = document.getElementById('gc-error-message');
+        if (errs.length > 0) {
+            errorBox.innerHTML = `<strong>Atención:</strong> Por favor completa los siguientes campos obligatorios:<br><ul style="margin-top:10px; margin-left:20px; list-style:disc;">${errs.map(e => `<li>${e}</li>`).join('')}</ul>`;
+            errorBox.style.display = 'block';
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        } else {
+            errorBox.style.display = 'none';
+        }
+    };
+
+    // Bloqueo Prefijo Teléfono
+    const tel = document.getElementById('tel');
+    tel.addEventListener('input', () => { if(!tel.value.startsWith('+569')) tel.value = '+569'; const part = tel.value.substring(4).replace(/\D/g, ''); tel.value = '+569' + part.substring(0, 8); });
+
+    // Lógica Toggles Principales
+    function setupToggle(chkId, contId, cardId) {
+        const chk = document.getElementById(chkId), cont = document.getElementById(contId), card = document.getElementById(cardId);
+        chk.addEventListener('change', () => { 
+            cont.style.display = chk.checked ? 'block' : 'none'; 
+            card.classList.toggle('active', chk.checked); 
+        });
+        card.onclick = (e) => { 
+            if(!['INPUT','SPAN','SELECT','TEXTAREA','BUTTON','OPTION'].includes(e.target.tagName)) chk.click(); 
+        };
+    }
+    setupToggle('req-aseo', 'content-aseo', 'card-aseo');
+    setupToggle('req-especial', 'content-especial', 'card-especial');
+
+    // Visibilidad Remodelación
+    document.querySelectorAll('input[name="estado"]').forEach(r => r.onchange = () => {
+        document.getElementById('obs-remodelacion-container').style.display = r.value.includes('remodelación') ? 'block' : 'none';
+    });
+
+    // Sub-selectores Servicios Especializados
+    const bindSub = (chkId, contId) => {
+        const chk = document.getElementById(chkId);
+        if(chk) chk.onchange = (e) => document.getElementById(contId).style.display = e.target.checked ? 'block' : 'none';
+    };
+    bindSub('chk-vidrios', 'vidrios-container');
+    bindSub('chk-alfombras', 'alfombras-container');
+    bindSub('chk-colchones', 'colchones-container');
+    bindSub('chk-pulido', 'pulido-container');
+    bindSub('chk-tapices', 'tapices-container');
+
+    document.getElementById('radio-casa').onclick = () => document.getElementById('casa-pisos-container').style.display = 'block';
+    document.getElementById('radio-depto').onclick = () => document.getElementById('casa-pisos-container').style.display = 'none';
+
+    // Listas Dinámicas
+    let mList = [], cList = [];
+    const renderM = () => {
+        const b = document.getElementById('mattress-list'); b.innerHTML = '';
+        mList.forEach((m,i) => b.innerHTML += `<div class="gc-list-item"><span>${m.qty} de ${m.size}</span><button type="button" onclick="mList.splice(${i},1);renderM()">✕</button></div>`);
+        document.getElementById('colchones-json').value = JSON.stringify(mList);
+    };
+    window.addMattress = () => {
+        if(mList.length >= 5) return showError(["Has alcanzado el límite de 5 colchones en la lista"]);
+        const size = document.getElementById('temp-size').value, qty = document.getElementById('temp-qty').value;
+        if(qty > 0) { mList.push({size, qty}); renderM(); }
+    };
+    const renderC = () => {
+        const b = document.getElementById('carpet-list'); b.innerHTML = '';
+        cList.forEach((a,i) => b.innerHTML += `<div class="gc-list-item"><span>${a.material} (${a.dim})</span><button type="button" onclick="cList.splice(${i},1);renderC()">✕</button></div>`);
+        document.getElementById('alfombras-json').value = JSON.stringify(cList);
+    };
+    window.addCarpet = () => {
+        if(cList.length >= 5) return showError(["Has alcanzado el límite de 5 alfombras en la lista"]);
+        const material = document.getElementById('temp-carpet-material').value, dim = document.getElementById('temp-carpet-dim').value;
+        if(dim) { cList.push({material, dim}); renderC(); document.getElementById('temp-carpet-dim').value=''; }
+    };
+
+    // Galería Visual
+    const input = document.getElementById('fotos'), preview = document.getElementById('preview');
+    input.onchange = () => {
+        preview.innerHTML = '';
+        Array.from(input.files).slice(0, 5).forEach(f => {
+            const r = new FileReader(); r.onload = e => preview.innerHTML += `<div class="gc-preview-item"><img src="${e.target.result}"></div>`; r.readAsDataURL(f);
+        });
+    };
+
+    // VALIDACIÓN FINAL
+    document.getElementById('gc-modular-form').onsubmit = (e) => {
+        let errs = [];
+        if(!document.getElementById('nombre').value) errs.push("Nombre Completo");
+        if(tel.value.length < 12) errs.push("Teléfono (+569 + 8 dígitos)");
+        if(!document.getElementById('email').value) errs.push("Email de Contacto");
+        if(!document.getElementById('comuna').value) errs.push("Comuna del Servicio");
+        if(!document.getElementById('fecha').value) errs.push("Fecha Propuesta");
+        
+        if(document.getElementById('req-aseo').checked) {
+            const metrosVal = document.getElementById('metros').value;
+            if(!metrosVal || metrosVal <= 0) errs.push("Superficie en Metros Cuadrados");
+            if(!document.querySelector('input[name="dorm"]:checked')) errs.push("Cantidad de Dormitorios");
+            if(!document.querySelector('input[name="banos"]:checked')) errs.push("Cantidad de Baños");
+            if(!document.querySelector('input[name="salas_estar"]:checked')) errs.push("Cantidad de Salas de Estar");
+            if(!document.querySelector('input[name="comedor"]:checked')) errs.push("Cantidad de Comedores");
+            if(!document.querySelector('input[name="estado"]:checked')) errs.push("Estado de la Propiedad");
+        }
+
+        if(!document.getElementById('terms').checked) errs.push("Aceptar los Términos y Condiciones");
+        
+        if(errs.length > 0) { 
+            e.preventDefault(); 
+            showError(errs);
+        } else { 
+            document.getElementById('gc-submit').innerText = "Enviando Solicitud..."; 
+        }
+    };
+</script>
+</body>
+</html>
