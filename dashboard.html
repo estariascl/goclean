@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go Clean - Dashboard Maestro v8.8</title>
+    
+    <!-- Librerías de Estilo y Autenticación -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; overflow-x: hidden; }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Panel Lateral */
+        .panel-closed { transform: translateX(100%); }
+        .panel-open { transform: translateX(0); }
+        #detail-panel { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; }
+        
+        /* Kanban */
+        .kanban-column { min-width: 300px; max-width: 300px; }
+        .view-active { background: #3385d9 !important; color: white !important; box-shadow: 0 4px 12px rgba(51, 133, 217, 0.3); }
+        
+        /* Scrollbars */
+        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .bg-auth {
+            background-image: radial-gradient(#3385d9 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+        }
+
+        .testing-badge {
+            position: fixed; bottom: 20px; left: 20px; background: #ef4444; color: white;
+            padding: 8px 15px; border-radius: 10px; font-weight: 900; font-size: 10px;
+            z-index: 1000; text-transform: uppercase; letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3); pointer-events: none;
+        }
+        
+        .note-item { position: relative; padding-left: 1.5rem; border-left: 2px solid #e2e8f0; }
+        .note-item::before { content: ''; position: absolute; left: -5px; top: 0; width: 8px; height: 8px; background: #3385d9; border-radius: 50%; }
+    </style>
+</head>
+<body class="antialiased text-slate-800">
+
+    <div id="test-mode-indicator" class="testing-badge" style="display:none">Modo de Depuración Servidor</div>
+
+    <!-- PANTALLA DE BLOQUEO -->
+    <div id="auth-screen" class="min-h-screen flex items-center justify-center p-6 bg-auth">
+        <div class="max-w-md w-full animate-fade-in text-center">
+            <div class="bg-white p-10 rounded-[40px] shadow-2xl border border-slate-200">
+                <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center text-white font-black text-3xl mx-auto shadow-lg shadow-blue-200 mb-8">G</div>
+                <h1 class="text-2xl font-900 text-slate-900 tracking-tight">Acceso Restringido</h1>
+                <p class="text-slate-500 text-sm mt-2 mb-8">Identifícate como administrador para gestionar las solicitudes.</p>
+
+                <div id="g_id_onload"
+                     data-client_id="377378316728-nifhvhpujjflsa10o5u7qdtl0eschbs1.apps.googleusercontent.com"
+                     data-callback="onGoogleLogin"
+                     data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin flex justify-center" data-type="standard" data-shape="pill" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
+                
+                <div id="error-display" class="hidden mt-6 bg-rose-50 text-rose-600 text-[10px] p-4 rounded-2xl border border-rose-100 font-bold uppercase tracking-wider">
+                    Error de conexión con la API. Verifica el archivo 'api-gestion.php'.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PRINCIPAL -->
+    <div id="dashboard-app" class="hidden min-h-screen flex flex-col">
+        
+        <!-- Barra de Navegación -->
+        <nav class="bg-white border-b border-slate-200 px-8 py-4 sticky top-0 z-40 shadow-sm flex flex-col lg:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black text-xl">G</div>
+                <div>
+                    <h1 class="text-lg font-900 text-slate-900 tracking-tighter leading-none uppercase">Go Clean</h1>
+                    <p id="last-update-text" class="text-[9px] font-700 text-slate-400 uppercase mt-1 tracking-widest leading-none">Sincronizando...</p>
+                </div>
+            </div>
+
+            <!-- Selector de Vistas -->
+            <div class="flex bg-slate-100 p-1 rounded-2xl border border-slate-200">
+                <button id="btn-list" onclick="setView('list')" class="px-5 py-2 rounded-xl text-[10px] font-900 transition-all view-active">LISTA</button>
+                <button id="btn-kanban" onclick="setView('kanban')" class="px-5 py-2 rounded-xl text-[10px] font-900 transition-all text-slate-500">KANBAN</button>
+                <button id="btn-stats" onclick="setView('stats')" class="px-5 py-2 rounded-xl text-[10px] font-900 transition-all text-slate-500">INDICADORES</button>
+            </div>
+
+            <!-- Acciones y Usuario -->
+            <div class="flex items-center gap-4">
+                <button onclick="openManualModal()" class="bg-slate-900 text-white px-5 py-2.5 rounded-xl font-800 text-[10px] uppercase tracking-wider hover:bg-black transition shadow-lg shadow-slate-200">+ Registro Manual</button>
+                <div class="flex items-center gap-3 border-l pl-4 border-slate-100">
+                    <div class="text-right hidden sm:block">
+                        <p id="user-name" class="text-xs font-900 text-slate-900 leading-none">---</p>
+                        <p class="text-[8px] font-800 text-blue-500 uppercase mt-1 tracking-tighter">Administrador</p>
+                    </div>
+                    <img id="user-pic" src="" alt="" class="w-9 h-9 rounded-full border-2 border-slate-100 shadow-sm bg-slate-100">
+                    <button onclick="logout()" class="p-2 text-slate-300 hover:text-rose-500 transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="flex-1 max-w-[1600px] mx-auto p-8 w-full animate-fade-in">
+            <!-- Título Dinámico -->
+            <div class="flex justify-between items-center mb-8">
+                <h2 id="view-title" class="text-2xl font-900 text-slate-900 tracking-tight">Resumen General</h2>
+                <button onclick="loadData()" class="text-blue-600 bg-blue-50 px-4 py-2 rounded-xl text-[10px] font-900 hover:bg-blue-100 transition flex items-center gap-2 uppercase tracking-widest">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Actualizar
+                </button>
+            </div>
+
+            <!-- VISTA: LISTA -->
+            <div id="view-list" class="bg-white rounded-[32px] border border-slate-200 overflow-hidden shadow-sm">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-slate-50 border-b text-slate-400 text-[10px] font-900 uppercase tracking-widest">
+                            <tr>
+                                <th class="px-8 py-5">Folio / Fecha</th>
+                                <th class="px-8 py-5">Cliente / Ubicación</th>
+                                <th class="px-8 py-5">Servicios Solicitados</th>
+                                <th class="px-8 py-5 text-center">Estado Gestión</th>
+                                <th class="px-8 py-5 text-right pr-12">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="list-render" class="divide-y divide-slate-50 text-sm"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- VISTA: KANBAN -->
+            <div id="view-kanban" class="hidden flex gap-6 overflow-x-auto pb-12 custom-scrollbar items-start"></div>
+
+            <!-- VISTA: INDICADORES -->
+            <div id="view-stats" class="hidden space-y-8 animate-fade-in">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-8 rounded-[40px] border border-slate-200 shadow-sm border-b-4 border-blue-500">
+                        <span class="text-[10px] font-900 text-slate-400 uppercase tracking-widest block mb-2">Total Solicitudes</span>
+                        <h3 class="text-5xl font-900 text-blue-600" id="stat-total">0</h3>
+                    </div>
+                    <div class="bg-white p-8 rounded-[40px] border border-slate-200 shadow-sm border-b-4 border-amber-500">
+                        <span class="text-[10px] font-900 text-amber-500 uppercase tracking-widest block mb-2">En Proceso</span>
+                        <h3 class="text-5xl font-900 text-slate-900" id="stat-pending">0</h3>
+                    </div>
+                    <div class="bg-white p-8 rounded-[40px] border border-slate-200 shadow-sm border-b-4 border-emerald-500">
+                        <span class="text-[10px] font-900 text-emerald-500 uppercase tracking-widest block mb-2">Finalizados</span>
+                        <h3 class="text-5xl font-900 text-slate-900" id="stat-done">0</h3>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-10 rounded-[40px] border border-slate-200 shadow-sm">
+                        <h3 class="text-[11px] font-900 mb-8 uppercase text-slate-400 tracking-widest">Salud del Pipeline (%)</h3>
+                        <div id="funnel-render" class="space-y-6"></div>
+                    </div>
+                    <div class="bg-white p-10 rounded-[40px] border border-slate-200 shadow-sm">
+                        <h3 class="text-[11px] font-900 mb-8 uppercase text-slate-400 tracking-widest">Carga Geográfica (%)</h3>
+                        <div id="comuna-stats-render" class="space-y-6"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- PANEL DE DETALLE -->
+    <div id="detail-panel" class="fixed top-0 right-0 w-full md:w-[550px] h-full bg-white shadow-2xl panel-closed flex flex-col border-l z-50">
+        <div class="p-8 border-b flex justify-between items-center bg-slate-50/50">
+            <div>
+                <span id="det-id" class="text-blue-600 font-900 text-xs uppercase tracking-widest">#0000</span>
+                <h2 id="det-nombre" class="text-2xl font-900 text-slate-900 leading-tight">---</h2>
+            </div>
+            <button onclick="togglePanel(false)" class="p-3 bg-white border rounded-2xl shadow-sm hover:bg-slate-50 transition">✕</button>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar">
+            <div id="det-lead-info" class="bg-blue-50 p-6 rounded-[32px] border border-blue-100 space-y-3"></div>
+            
+            <div class="grid grid-cols-2 gap-4">
+                <a id="det-wa" href="#" target="_blank" class="bg-emerald-500 text-white p-5 rounded-[24px] font-900 text-center shadow-lg shadow-emerald-50 hover:bg-emerald-600 transition flex items-center justify-center gap-2 text-sm">WhatsApp</a>
+                <a id="det-mail" href="#" class="bg-slate-900 text-white p-5 rounded-[24px] font-900 text-center hover:bg-black transition flex items-center justify-center gap-2 text-sm">Email</a>
+            </div>
+
+            <!-- BITÁCORA -->
+            <div class="border-t pt-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-[10px] font-900 uppercase text-slate-400 tracking-[0.2em]">Bitácora de Seguimiento</h3>
+                    <span class="bg-blue-50 text-blue-600 text-[8px] font-900 px-2 py-0.5 rounded-full uppercase">Historial</span>
+                </div>
+                
+                <div id="notes-container" class="space-y-6 mb-8 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div>
+
+                <div class="bg-slate-50 p-6 rounded-[32px] border border-slate-100">
+                    <textarea id="note-input" class="w-full bg-transparent border-none focus:ring-0 text-sm placeholder:text-slate-400 leading-relaxed resize-none" rows="3" placeholder="Registrar avance comercial..."></textarea>
+                    <div class="flex items-center justify-between mt-4 border-t pt-4">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                            <span class="text-[9px] font-800 text-slate-400 uppercase" id="current-user-note-label">---</span>
+                        </div>
+                        <button onclick="saveNote()" class="bg-blue-600 text-white px-5 py-2 rounded-xl text-[10px] font-900 uppercase tracking-widest hover:bg-blue-700 transition shadow-lg shadow-blue-100">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL MANUAL -->
+    <div id="manual-modal" class="fixed inset-0 bg-slate-900/60 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-[40px] w-full max-w-lg p-10 animate-fade-in shadow-2xl relative">
+            <h2 class="text-2xl font-900 mb-6 text-slate-900">Registro Manual</h2>
+            <div class="space-y-4">
+                <input type="text" id="m-nombre" placeholder="Nombre completo" class="w-full border rounded-xl p-3.5 outline-none text-sm focus:ring-2 focus:ring-blue-100 transition-all">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="m-tel" placeholder="WhatsApp" class="border rounded-xl p-3.5 outline-none text-sm focus:ring-2 focus:ring-blue-100">
+                    <input type="text" id="m-comuna" placeholder="Comuna" class="border rounded-xl p-3.5 outline-none text-sm focus:ring-2 focus:ring-blue-100">
+                </div>
+                <input type="text" id="m-servicios" placeholder="Servicio requerido" class="w-full border rounded-xl p-3.5 outline-none text-sm focus:ring-2 focus:ring-blue-100">
+                <input type="date" id="m-fecha" class="w-full border rounded-xl p-3.5 outline-none text-sm focus:ring-2 focus:ring-blue-100">
+            </div>
+            <div class="flex gap-3 mt-8">
+                <button onclick="closeManualModal()" class="flex-1 bg-slate-100 py-4 rounded-2xl font-800 text-xs uppercase tracking-widest text-slate-500">Cancelar</button>
+                <button onclick="submitManual()" class="flex-1 bg-blue-600 text-white py-4 rounded-2xl font-800 text-xs uppercase tracking-widest shadow-lg shadow-blue-100">Registrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="overlay" onclick="togglePanel(false)" class="fixed inset-0 bg-slate-900/60 hidden z-40 backdrop-blur-sm"></div>
+
+    <script>
+        const STAGES = ["Nueva", "Contactada", "Cotizada", "Agendada", "Finalizada", "Perdida"];
+        let allLeads = [];
+        let currentView = 'list';
+        let activeLeadId = null;
+        let currentUser = null;
+
+        // --- AUTH ---
+        function onGoogleLogin(response) {
+            const payload = JSON.parse(atob(response.credential.split('.')[1]));
+            localStorage.setItem('gc_token', response.credential);
+            localStorage.setItem('gc_user_data', JSON.stringify(payload));
+            showApp(payload);
+        }
+
+        function showApp(user) {
+            currentUser = user;
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('dashboard-app').classList.remove('hidden');
+            document.getElementById('user-name').innerText = user.name;
+            document.getElementById('current-user-note-label').innerText = user.name;
+            document.getElementById('user-pic').src = user.picture || `https://ui-avatars.com/api/?name=${user.name}&background=3385d9&color=fff`;
+            loadData();
+        }
+
+        function logout() { localStorage.clear(); location.reload(); }
+
+        // --- CORE API REQUEST (v8.8 - Protegida contra loops) ---
+        async function apiRequest(method = 'GET', body = null) {
+            const token = localStorage.getItem('gc_token') || "";
+            const options = {
+                method,
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-Google-Token': token 
+                }
+            };
+            if (body) options.body = JSON.stringify(body);
+            
+            try {
+                const res = await fetch('api-gestion.php', options);
+                if (res.status === 401) { return null; }
+                const result = await res.json();
+                
+                if (result.mode === 'testing') {
+                    document.getElementById('test-mode-indicator').style.display = 'block';
+                }
+                
+                return result;
+            } catch (e) { 
+                console.error("API Fetch Error:", e); 
+                document.getElementById('error-display').classList.remove('hidden');
+                return null; 
+            }
+        }
+
+        async function loadData() {
+            document.getElementById('last-update-text').innerText = "Sincronizando...";
+            const result = await apiRequest('GET');
+            if (result && result.data) {
+                allLeads = result.data.map(i => ({
+                    ...i, id: i['ID Solicitud'],
+                    status: (i['Estado Gestion'] || 'Nueva').trim(),
+                    notas: JSON.parse(i['Notas'] || '[]')
+                })).reverse();
+                setUpdateTime();
+                render();
+            }
+        }
+
+        function setUpdateTime() {
+            const now = new Date();
+            document.getElementById('last-update-text').innerText = `Sincronizado: ${now.toLocaleTimeString()}`;
+        }
+
+        // --- VIEWS ---
+        function setView(view) {
+            currentView = view;
+            ['list', 'kanban', 'stats'].forEach(v => {
+                document.getElementById(`view-${v}`).classList.toggle('hidden', v !== view);
+                document.getElementById(`btn-${v}`).classList.toggle('view-active', v === view);
+            });
+            const titles = { 'list': 'Solicitudes Recientes', 'kanban': 'Flujo de Trabajo', 'stats': 'Análisis de Rendimiento' };
+            document.getElementById('view-title').innerText = titles[view];
+            render();
+        }
+
+        function render() {
+            if (currentView === 'list') renderList();
+            else if (currentView === 'kanban') renderKanban();
+            else renderStats();
+        }
+
+        function renderList() {
+            const list = document.getElementById('list-render');
+            list.innerHTML = '';
+            allLeads.forEach(lead => {
+                list.innerHTML += `<tr class="hover:bg-blue-50/20 transition-colors cursor-pointer group" onclick="openLead('${lead.id}')">
+                    <td class="px-8 py-5"><span class="text-[10px] font-900 text-slate-400 block uppercase">#${lead.id}</span><span class="text-[10px] font-800 text-blue-400">${lead['Fecha Registro'].split(' ')[0]}</span></td>
+                    <td class="px-8 py-5 font-800 text-slate-900">${lead.Nombre}<br><span class="text-[11px] text-slate-400 font-semibold uppercase tracking-tight">📍 ${lead.Comuna}</span></td>
+                    <td class="px-8 py-5"><span class="block font-800 text-blue-600 uppercase text-xs">🗓️ ${lead['Fecha Propuesta']}</span><span class="text-[11px] text-slate-400 italic">${lead.Servicios}</span></td>
+                    <td class="px-8 py-5 text-center" onclick="event.stopPropagation()">
+                        <select onchange="updateStatus('${lead.id}', this.value)" class="text-[10px] font-900 px-3 py-2 rounded-xl uppercase border shadow-sm outline-none bg-white cursor-pointer hover:border-blue-400 transition-colors">
+                            ${STAGES.map(s => `<option value="${s}" ${lead.status === s ? 'selected' : ''}>${s}</option>`).join('')}
+                        </select>
+                    </td>
+                    <td class="px-8 py-5 text-right"><button class="text-[10px] font-900 uppercase bg-white border border-slate-200 px-4 py-2 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-all shadow-sm">Ver Ficha</button></td>
+                </tr>`;
+            });
+        }
+
+        function renderKanban() {
+            const board = document.getElementById('view-kanban');
+            board.innerHTML = '';
+            STAGES.forEach(stage => {
+                const stageLeads = allLeads.filter(l => l.status === stage);
+                board.innerHTML += `
+                    <div class="kanban-column flex flex-col h-[calc(100vh-280px)]">
+                        <div class="flex justify-between items-center mb-4 px-2">
+                            <h3 class="text-[11px] font-900 uppercase text-slate-400 tracking-widest">${stage}</h3>
+                            <span class="bg-white text-slate-600 text-[9px] font-900 px-2 py-0.5 rounded-full border border-slate-200">${stageLeads.length}</span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto custom-scrollbar space-y-3 p-1">
+                            ${stageLeads.map(l => `
+                                <div onclick="openLead('${l.id}')" class="bg-white p-5 rounded-[28px] border shadow-sm cursor-pointer hover:border-blue-400 transition-all hover:scale-[1.02]">
+                                    <span class="text-[9px] font-900 text-blue-500 uppercase block mb-1">#${l.id}</span>
+                                    <h4 class="text-sm font-800 text-slate-900 leading-tight">${l.Nombre}</h4>
+                                    <p class="text-[10px] text-slate-400 font-bold mt-1 uppercase tracking-tighter">📍 ${l.Comuna}</p>
+                                    <p class="text-[10px] text-blue-600 font-bold mt-3 border-t pt-3">🗓️ ${l['Fecha Propuesta']}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function renderStats() {
+            document.getElementById('stat-total').innerText = allLeads.length;
+            document.getElementById('stat-pending').innerText = allLeads.filter(l => l.status === 'Nueva' || l.status === 'Contactada' || l.status === 'Cotizada').length;
+            document.getElementById('stat-done').innerText = allLeads.filter(l => l.status === 'Finalizada').length;
+
+            const funnel = document.getElementById('funnel-render');
+            funnel.innerHTML = '';
+            STAGES.forEach(stage => {
+                const count = allLeads.filter(l => l.status === stage).length;
+                const pct = allLeads.length > 0 ? (count / allLeads.length) * 100 : 0;
+                funnel.innerHTML += `<div><div class="flex justify-between mb-2"><span class="text-xs font-900 uppercase text-slate-900">${stage}</span><span class="text-xs font-800 text-blue-600">${count} (${Math.round(pct)}%)</span></div><div class="h-3 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-blue-600 rounded-full transition-all duration-700" style="width: ${pct}%"></div></div></div>`;
+            });
+
+            const comunaStats = document.getElementById('comuna-stats-render');
+            comunaStats.innerHTML = '';
+            const comunasMap = {};
+            allLeads.forEach(l => comunasMap[l.Comuna] = (comunasMap[l.Comuna] || 0) + 1);
+            const sortedComunas = Object.entries(comunasMap).sort((a,b) => b[1] - a[1]);
+            sortedComunas.forEach(([name, count]) => {
+                const pct = Math.round((count / allLeads.length) * 100);
+                comunaStats.innerHTML += `<div><div class="flex justify-between mb-2"><span class="text-xs font-800 text-slate-700 uppercase tracking-tight">${name}</span><span class="text-xs font-900 text-slate-900">${pct}%</span></div><div class="h-2 bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-slate-400 rounded-full transition-all duration-700" style="width: ${pct}%"></div></div></div>`;
+            });
+        }
+
+        // --- UPDATES ---
+        async function updateStatus(id, newStatus) {
+            await apiRequest('POST', { id, nuevo_estado: newStatus });
+            loadData();
+        }
+
+        function openLead(id) {
+            activeLeadId = id;
+            const lead = allLeads.find(l => l.id === id);
+            document.getElementById('det-id').innerText = '#' + lead.id;
+            document.getElementById('det-nombre').innerText = lead.Nombre;
+            document.getElementById('det-lead-info').innerHTML = `<p class="text-sm"><b>📅 Propuesta:</b> ${lead['Fecha Propuesta']}</p><p class="text-sm"><b>📍 Ubicación:</b> ${lead.Comuna}</p><p class="text-sm"><b>🏠 Inmueble:</b> ${lead['Estado Propiedad']} (${lead.M2} m²)</p><p class="text-sm"><b>🛠️ Servicios:</b> ${lead.Servicios}</p><p class="text-[10px] pt-4 font-mono text-slate-400 uppercase">📧 ${lead.Email}</p>`;
+            document.getElementById('det-wa').href = `https://wa.me/${lead.Telefono.replace(/\D/g,'')}`;
+            document.getElementById('det-mail').href = `mailto:${lead.Email}`;
+            renderNotes(lead.notas);
+            togglePanel(true);
+        }
+
+        function renderNotes(notes) {
+            const container = document.getElementById('notes-container');
+            container.innerHTML = notes.length ? '' : '<p class="text-xs text-slate-400 italic text-center py-6">Sin registros de seguimiento.</p>';
+            notes.forEach(n => {
+                container.innerHTML += `<div class="note-item"><div class="flex items-center gap-2 mb-1"><span class="text-[9px] font-900 text-blue-500 uppercase">${n.fecha}</span><span class="text-[8px] font-800 text-slate-300 uppercase italic">por ${n.usuario || 'Sistema'}</span></div><p class="text-sm text-slate-600 leading-relaxed">${n.texto}</p></div>`;
+            });
+            setTimeout(() => container.scrollTop = container.scrollHeight, 100);
+        }
+
+        async function saveNote() {
+            const txt = document.getElementById('note-input').value;
+            if(!txt) return;
+            const lead = allLeads.find(l => l.id === activeLeadId);
+            const nuevaNota = { 
+                fecha: new Date().toLocaleString('es-CL'), 
+                usuario: currentUser.name, 
+                texto: txt 
+            };
+            lead.notas.push(nuevaNota);
+            await apiRequest('POST', { id: activeLeadId, notas_json: JSON.stringify(lead.notas) });
+            document.getElementById('note-input').value = '';
+            renderNotes(lead.notas);
+        }
+
+        function togglePanel(show) {
+            document.getElementById('detail-panel').classList.toggle('panel-open', show);
+            document.getElementById('detail-panel').classList.toggle('panel-closed', !show);
+            document.getElementById('overlay').classList.toggle('hidden', !show);
+        }
+
+        function openManualModal() { document.getElementById('manual-modal').classList.remove('hidden'); }
+        function closeManualModal() { document.getElementById('manual-modal').classList.add('hidden'); }
+        async function submitManual() {
+            const data = { 
+                action: 'create', 
+                nombre: document.getElementById('m-nombre').value, 
+                telefono: document.getElementById('m-tel').value, 
+                comuna: document.getElementById('m-comuna').value, 
+                servicios: document.getElementById('m-servicios').value, 
+                fecha_propuesta: document.getElementById('m-fecha').value 
+            };
+            await apiRequest('POST', data);
+            closeManualModal();
+            loadData();
+        }
+
+        // --- INIT ---
+        window.onload = async () => {
+            // Intento de precarga (si el servidor está en test mode cargará solo)
+            const result = await apiRequest('GET');
+            if (result) {
+                const savedUser = JSON.parse(localStorage.getItem('gc_user_data') || '{"name":"Admin de Prueba"}');
+                showApp(savedUser);
+            }
+        };
+    </script>
+</body>
+</html>
