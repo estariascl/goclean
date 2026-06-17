@@ -1,451 +1,217 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GoClean Santiago- Cotizador Modular v8.0</title>
-    
-    <!-- Fuente Inter -->
+    <title>Go Clean Santiago - Limpieza Profesional de Alto Estándar</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        goblue: '#3385d9',      // Azul institucional Go Clean
+                        godark: '#1e1b4b',      // Índigo oscuro premium
+                        gogreen: '#6fc43c',     // Verde acento de la marca
+                        gobg: '#f8fafc'         // Fondo ultra limpio
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        .gc-scope {
-            --brand-blue: #3385d9; 
-            --brand-dark: #1e1b4b;
-            --bg-page: #f8fafc;
-            --bg-card: #ffffff;
-            --border: #e2e8f0;
-            --shadow: 0 10px 30px rgba(51, 133, 217, 0.12);
-            --danger: #ef4444;
-            --whatsapp: #25d366;
-            
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-            padding: 20px 15px;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            background-color: var(--bg-page);
-            -webkit-tap-highlight-color: transparent;
-        }
-        .gc-scope * { box-sizing: border-box; }
-        .gc-form { background: var(--bg-card); padding: 30px 20px; border-radius: 32px; box-shadow: var(--shadow); max-width: 850px; width: 100%; border: 1px solid #f1f5f9; }
-        
-        .gc-logo-header { display: block; max-height: 90px; width: auto; margin: 0 auto 1.5rem auto; }
-        .gc-form-header { text-align: center; margin-bottom: 30px; }
-        .gc-title { margin: 0; color: var(--brand-blue); font-size: 26px; font-weight: 900; letter-spacing: -0.8px; }
-        
-        .gc-section { margin-bottom: 35px; padding-top: 25px; border-top: 1px solid var(--border); }
-        .gc-section-label { 
-            display: inline-block; font-size: 11px; font-weight: 800; text-transform: uppercase; 
-            letter-spacing: 1.5px; color: var(--brand-blue); background: #eff6ff; 
-            padding: 4px 12px; border-radius: 8px; margin-bottom: 20px;
+        body {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#cbd5e1 0.6px, transparent 0.6px);
+            background-size: 24px 24px;
         }
 
-        .gc-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .gc-full { grid-column: span 2; }
-        
-        .gc-group label { display: block; font-size: 13px; font-weight: 700; color: var(--brand-blue); margin-bottom: 8px; }
-        .gc-input, .gc-select, .gc-textarea { width: 100%; padding: 14px 15px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 16px; transition: 0.2s; color: #1f2937; background: #fff; }
-        .gc-input:focus, .gc-select:focus { border-color: var(--brand-blue); outline: none; box-shadow: 0 0 0 4px rgba(51, 133, 217, 0.1); }
-        
-        /* Controles Toggle */
-        .gc-toggle-card {
-            background: #f1f5f9; padding: 22px; border-radius: 20px; margin-bottom: 15px; cursor: pointer; transition: 0.3s; border: 2px solid transparent; 
-            display: flex; align-items: center; justify-content: space-between; gap: 15px;
+        .gc-main-card {
+            background: #ffffff;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 15px 35px rgba(51, 133, 217, 0.08);
         }
-        .gc-toggle-card.active { border-color: var(--brand-blue); background: #eff6ff; box-shadow: 0 8px 20px rgba(51, 133, 217, 0.08); }
-        .gc-toggle-info { flex: 1; }
-        .gc-toggle-info h4 { margin: 0; font-size: 17px; font-weight: 800; color: var(--brand-blue); }
-        .gc-toggle-info p { margin: 4px 0 0; font-size: 12px; color: #64748b; line-height: 1.4; }
 
-        .gc-switch-container { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
-        .gc-switch-track { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px; }
-        .gc-switch-track:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        input:checked + .gc-switch-track { background-color: var(--brand-blue); }
-        input:checked + .gc-switch-track:before { transform: translateX(20px); }
-
-        .gc-conditional-content { display: none; margin-top: -10px; margin-bottom: 25px; animation: slideDown 0.3s ease-out; }
-        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Selectores Numéricos */
-        .gc-num-selector { display: flex; flex-wrap: wrap; gap: 8px; }
-        .gc-num-selector label { flex: 1; min-width: 40px; margin: 0; cursor: pointer; }
-        .gc-num-selector input { display: none; }
-        .gc-num-selector span { 
-            display: block; padding: 12px 8px; background: #fff; border: 1.5px solid var(--border); text-align: center; 
-            border-radius: 12px; font-weight: 800; font-size: 14px; color: #475569; transition: 0.2s; 
+        .gc-choice-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .gc-num-selector input:checked + span { background-color: var(--brand-blue); color: #fff; border-color: var(--brand-blue); }
 
-        /* Grid de Opciones */
-        .gc-option-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .gc-option-item input { display: none; }
-        .gc-option-item span { 
-            display: flex; align-items: center; justify-content: center; padding: 14px; 
-            background: #fff; border: 1.5px solid var(--border); border-radius: 14px; 
-            font-size: 13px; font-weight: 700; color: #475569; text-align: center; cursor: pointer; transition: 0.2s; 
-            min-height: 60px; width: 100%;
+        .gc-choice-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(51, 133, 217, 0.12);
         }
-        .gc-option-item input:checked + span { border-color: var(--brand-blue); background: #eff6ff; color: var(--brand-blue); }
 
-        .gc-sub-option { display: none; margin-top: 10px; padding: 20px; background: #f8fafc; border-radius: 20px; border: 1.5px solid var(--border); }
-        .gc-sub-title { display: block; font-size: 11px; font-weight: 900; color: var(--brand-dark); margin-bottom: 15px; text-transform: uppercase; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; letter-spacing: 0.5px; }
-
-        .gc-list-item { background: #fff; border: 1px solid var(--border); padding: 12px 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 13px; font-weight: 700; }
-        .gc-list-item button { color: var(--danger); font-weight: 900; border: none; background: none; cursor: pointer; }
-
-        /* Carga de Imágenes Original */
-        .gc-upload-card { 
-            position: relative; background: #fff; border: 2px dashed var(--border); border-radius: 24px; padding: 24px; 
-            text-align: center; cursor: pointer; min-height: 140px; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; transition: 0.2s; 
+        .gc-choice-card.active-blue:hover {
+            border-color: #3385d9;
         }
-        .gc-upload-card:hover { border-color: var(--brand-blue); background: #f8fbff; }
-        .gc-upload-icon { width: 36px; height: 36px; color: #cbd5e1; margin-bottom: 12px; }
-        .gc-upload-label { font-size: 15px; font-weight: 800; color: var(--brand-dark); }
-        .gc-file-hidden { position: absolute; inset: 0; opacity: 0; cursor: pointer; z-index: 10; }
-        
-        .gc-preview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 12px; margin-top: 15px; }
-        .gc-preview-item { position: relative; aspect-ratio: 1; border-radius: 14px; overflow: hidden; border: 1.5px solid var(--border); }
-        .gc-preview-item img { width: 100%; height: 100%; object-fit: cover; }
 
-        .gc-btn { width: 100%; margin-top: 25px; padding: 22px; border: none; border-radius: 20px; background: var(--brand-blue); color: #fff; font-weight: 900; font-size: 18px; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 25px rgba(51, 133, 217, 0.25); }
-        .gc-btn-secondary { background: #fff; color: var(--brand-blue); border: 1.5px solid var(--brand-blue); padding: 12px; border-radius: 12px; font-size: 12px; font-weight: 800; width: 100%; margin-top: 10px; cursor: pointer; }
-        
-        /* Términos y Condiciones Original */
-        .gc-terms-row { display: flex; align-items: flex-start; gap: 12px; margin-top: 20px; padding: 0 5px; }
-        .gc-terms-row input { margin-top: 4px; width: 18px; height: 18px; cursor: pointer; }
-        .gc-terms-row label { font-size: 13px; color: var(--brand-blue); font-weight: 600; line-height: 1.4; cursor: pointer; }
-        .gc-terms-row a { color: var(--brand-dark); font-weight: 800; text-decoration: underline; }
-
-        .gc-helper-text { display: block; font-size: 10px; color: #64748b; margin-top: 4px; line-height: 1.4; font-weight: 500; }
-
-        /* Botón de WhatsApp Flotante Permanente */
-        .gc-whatsapp-float {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 64px;
-            height: 64px;
-            background-color: var(--whatsapp) !important;
-            color: #ffffff !important;
-            border-radius: 50px;
-            text-align: center;
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: none;
-        }
-        .gc-whatsapp-float:hover { transform: scale(1.1); background-color: #20b358 !important; }
-        .gc-whatsapp-float svg { width: 36px; height: 36px; fill: #ffffff; }
-
-        @media (max-width: 640px) { 
-            .gc-grid { grid-template-columns: 1fr; } 
-            .gc-full { grid-column: span 1; }
-            .gc-whatsapp-float { bottom: 20px; right: 20px; width: 60px; height: 60px; }
+        .gc-choice-card.active-dark:hover {
+            border-color: #1e1b4b;
         }
     </style>
 </head>
-<body>
 
-<div class="gc-scope">
-    <form class="gc-form" id="gc-modular-form" method="POST" action="enviar-cotizacion.php" enctype="multipart/form-data" novalidate>
-        
-        <img src="go.jpeg" alt="Go Clean Logo" class="gc-logo-header">
+<body class="antialiased min-h-screen py-10 px-4 flex flex-col justify-between">
 
-        <header class="gc-form-header">
-            <h2 class="gc-title">Personaliza tu Cotización ✨</h2>
+    <!-- CONTENEDOR CENTRAL (Look and Feel idéntico al Cotizador) -->
+    <div class="max-w-[950px] w-full mx-auto gc-main-card rounded-[40px] p-8 md:p-14">
+
+        <!-- Logotipo Oficial de Go Clean -->
+        <div class="text-center mb-8">
+            <img src="go.jpeg" alt="Go Clean Logo" class="mx-auto h-24 w-auto mb-6 drop-shadow-sm">
+            <div
+                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-goblue text-[11px] font-900 uppercase tracking-widest">
+                <span class="w-2 h-2 rounded-full bg-goblue animate-pulse"></span> Servicios Profesionales Santiago
+            </div>
+        </div>
+
+        <!-- Mensaje de Impacto -->
+        <header class="text-center max-w-2xl mx-auto mb-12">
+            <h1 class="text-3xl md:text-4xl font-900 text-godark tracking-tight leading-tight mb-4">
+                ¿Qué tipo de espacio <br class="hidden sm:block">
+                <span class="text-goblue">necesitas limpiar hoy?</span>
+            </h1>
+            <p class="text-slate-500 font-medium text-sm md:text-base leading-relaxed">
+                Selecciona una de nuestras áreas de especialidad para iniciar tu cotización personalizada con el
+                estándar operativo de Go Clean.
+            </p>
         </header>
 
-        <div id="gc-error-message" style="display:none; background:#fef2f2; border:1px solid #fee2e2; color:#b91c1c; padding:18px; border-radius:16px; margin-bottom:25px; font-size:14px; font-weight:700;"></div>
+        <!-- SECCIÓN DE SELECCIÓN (Foco de Cotización) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
 
-        <!-- 1. DATOS DE CONTACTO -->
-        <div>
-            <span class="gc-section-label">1. Datos de Contacto</span>
-            <div class="gc-grid">
-                <div class="gc-group gc-full"><label>Nombre Completo*</label><input type="text" name="nombre_completo" id="nombre" class="gc-input" placeholder="Ej: Alejandro López" required></div>
-                <div class="gc-group"><label>Email*</label><input type="email" name="email" id="email" class="gc-input" placeholder="correo@ejemplo.com" required></div>
-                <div class="gc-group"><label>Teléfono / WhatsApp*</label><input type="tel" name="telefono" id="tel" class="gc-input" value="+569" required></div>
-                <div class="gc-group">
-                    <label>Comuna del Servicio*</label>
-                    <select name="comuna" id="comuna" class="gc-select" required>
-                        <option value="" disabled selected>Seleccionar comuna...</option>
-                        <option value="Buin">Buin</option><option value="Calera de Tango">Calera de Tango</option><option value="Chicureo-Chamisero">Chicureo-Chamisero</option><option value="Colina">Colina</option><option value="Curacaví">Curacaví</option><option value="Huechuraba">Huechuraba</option><option value="La Florida">La Florida</option><option value="La Reina">La Reina</option><option value="Las Condes">Las Condes</option><option value="Lo Barnechea">Lo Barnechea</option><option value="Macul">Macul</option><option value="Ñuñoa">Ñuñoa</option><option value="Paine">Paine</option><option value="Peñaflor">Peñaflor</option><option value="Peñalolén">Peñalolén</option><option value="Providencia">Providencia</option><option value="Puente Alto">Puente Alto</option><option value="San Joaquín">San Joaquín</option><option value="San Miguel">San Miguel</option><option value="Santiago Centro">Santiago Centro</option><option value="Talagante">Talagante</option><option value="Vitacura">Vitacura</option>
-                        <option value="" disabled>---</option>
-                        <option value="Cerrillos">Cerrillos</option><option value="Cerro Navia">Cerro Navia</option><option value="Conchalí">Conchalí</option><option value="El Bosque">El Bosque</option><option value="Estación Central">Estación Central</option><option value="Independencia">Independencia</option><option value="La Cisterna">La Cisterna</option><option value="La Granja">La Granja</option><option value="La Pintana">La Pintana</option><option value="Lo Espejo">Lo Espejo</option><option value="Lo Prado">Lo Prado</option><option value="Maipú">Maipú</option><option value="Pedro Aguirre Cerda">Pedro Aguirre Cerda</option><option value="Pudahuel">Pudahuel</option><option value="Quilicura">Quilicura</option><option value="Quinta Normal">Quinta Normal</option><option value="Recoleta">Recoleta</option><option value="Renca">Renca</option><option value="San Ramón">San Ramón</option>
-                    </select>
+            <!-- Opción Residencial -->
+            <section class="gc-choice-card active-blue p-8 rounded-[32px] flex flex-col justify-between h-full">
+                <div>
+                    <!-- Icono Casa -->
+                    <div class="w-14 h-14 bg-blue-50 text-goblue rounded-2xl flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                    </div>
+                    <span class="text-[10px] font-900 text-goblue uppercase tracking-widest block mb-1">Para
+                        Particulares</span>
+                    <h3 class="text-2xl font-900 text-godark mb-4 tracking-tight">Servicio Residencial</h3>
+                    <p class="text-slate-500 text-xs md:text-sm leading-relaxed mb-6 font-medium">
+                        Cotiza en línea y de forma modular la limpieza de tu casa o departamento. Ideal para mudanzas,
+                        aseo profundo recurrente o post-remodelaciones.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-xs font-semibold text-slate-700">
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-gogreen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                            Metraje calibrado y número de ambientes
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-gogreen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                            Lavado técnico de tapices y alfombras
+                        </li>
+                    </ul>
                 </div>
-                <div class="gc-group gc-full"><label>Fecha Propuesta*</label><input type="date" name="fecha_servicio" id="fecha" class="gc-input" required></div>
-            </div>
+                <a href="/cotizar/"
+                    class="block w-full text-center bg-goblue hover:bg-godark text-white font-900 py-4 rounded-xl shadow-lg shadow-blue-50 transition-all text-sm uppercase tracking-wider">
+                    Cotizar Mi Hogar
+                </a>
+            </section>
+
+            <!-- Opción Corporativa -->
+            <section
+                class="gc-choice-card active-dark p-8 rounded-[32px] flex flex-col justify-between h-full bg-slate-50/50">
+                <div>
+                    <!-- Icono Edificio -->
+                    <div class="w-14 h-14 bg-slate-100 text-godark rounded-2xl flex items-center justify-center mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 21V5a2 2 0 00-2-2H5a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                    </div>
+                    <span class="text-[10px] font-900 text-slate-400 uppercase tracking-widest block mb-1">Para Empresas
+                        e Instituciones</span>
+                    <h3 class="text-2xl font-900 text-godark mb-4 tracking-tight">Servicio Empresas</h3>
+                    <p class="text-slate-500 text-xs md:text-sm leading-relaxed mb-6 font-medium">
+                        Soluciones especializadas para oficinas, locales de retail, constructoras y obras inmobiliarias.
+                        Diseñamos planes operativos a tu medida.
+                    </p>
+                    <ul class="space-y-3 mb-8 text-xs font-semibold text-slate-700">
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-gogreen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                            Evaluación técnica en terreno sin costo
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-gogreen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                            Facturación exenta e informes preventivos
+                        </li>
+                    </ul>
+                </div>
+                <a href="/empresas/"
+                    class="block w-full text-center bg-godark hover:bg-goblue text-white font-900 py-4 rounded-xl shadow-lg shadow-slate-100 transition-all text-sm uppercase tracking-wider">
+                    Solicitar Evaluación Técnica
+                </a>
+            </section>
+
         </div>
 
-        <!-- 2. SELECCIÓN DE SERVICIOS -->
-        <div class="gc-section">
-            <span class="gc-section-label">2. Selección de Servicios</span>
-            
-            <label class="gc-toggle-card" id="card-aseo">
-                <div class="gc-toggle-info"><h4>Limpieza Profunda / Integral</h4><p>Ideal para mudanzas, casas vacías o mantenimientos totales de la propiedad.</p></div>
-                <div class="gc-switch-container"><input type="checkbox" name="req_aseo" id="req-aseo" style="display:none"><span class="gc-switch-track"></span></div>
-            </label>
-
-            <div class="gc-conditional-content" id="content-aseo">
-                <div class="gc-grid">
-                    <div class="gc-group gc-full">
-                        <label>Tipo de Vivienda*</label>
-                        <div class="gc-option-grid">
-                            <label class="gc-option-item"><input type="radio" name="tipo_vivienda" value="Casa"><span>🏠 Casa</span></label>
-                            <label class="gc-option-item"><input type="radio" name="tipo_vivienda" value="Departamento"><span>🏢 Departamento</span></label>
-                        </div>
-                    </div>
-
-                    <div id="pisos-vivienda-container" style="display:none;" class="gc-group gc-full">
-                        <label>Cantidad de Pisos*</label>
-                        <div class="gc-num-selector">
-                            <label><input type="radio" name="pisos_vivienda" value="1"><span>1</span></label>
-                            <label><input type="radio" name="pisos_vivienda" value="2"><span>2</span></label>
-                            <label><input type="radio" name="pisos_vivienda" value="3"><span>3</span></label>
-                            <label><input type="radio" name="pisos_vivienda" value="4+"><span>4+</span></label>
-                        </div>
-                    </div>
-
-                    <div id="depto-options-container" style="display:none;" class="gc-group gc-full">
-                        <label>Características del Departamento (Opcional)</label>
-                        <div style="display: flex; flex-direction: column; gap: 10px; background: #fff; padding: 15px; border-radius: 15px; border: 1px solid var(--border);">
-                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--brand-dark);"><input type="checkbox" name="depto_duplex" value="Sí" style="width:18px; height:18px;"> 🏢 ¿Es Duplex?</label>
-                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--brand-dark);"><input type="checkbox" name="depto_quincho" value="Sí" style="width:18px; height:18px;"> 🥩 Incluir Quincho Privado</label>
-                        </div>
-                    </div>
-
-                    <div class="gc-group gc-full"><label>Metros Cuadrados Aproximados*</label><input type="number" name="metros" id="metros" class="gc-input" placeholder="Ej: 120"></div>
-                    
-                    <div class="gc-group gc-full">
-                        <label>Cantidad de Dormitorios*</label>
-                        <div class="gc-num-selector">
-                            <label><input type="radio" name="dorm" value="1"><span>1</span></label>
-                            <label><input type="radio" name="dorm" value="2"><span>2</span></label>
-                            <label><input type="radio" name="dorm" value="3"><span>3</span></label>
-                            <label><input type="radio" name="dorm" value="4"><span>4</span></label>
-                            <label><input type="radio" name="dorm" value="5"><span>5</span></label>
-                            <label><input type="radio" name="dorm" value="6"><span>6</span></label>
-                            <label><input type="radio" name="dorm" value="7+"><span>7+</span></label>
-                        </div>
-                    </div>
-                    
-                    <div class="gc-group"><label>Baños*</label><div class="gc-num-selector"><label><input type="radio" name="banos" value="1"><span>1</span></label><label><input type="radio" name="banos" value="2"><span>2</span></label><label><input type="radio" name="banos" value="3"><span>3</span></label><label><input type="radio" name="banos" value="4+"><span>4+</span></label></div></div>
-                    <div class="gc-group"><label>Salas de Estar*</label><div class="gc-num-selector"><label><input type="radio" name="salas_estar" value="0"><span>0</span></label><label><input type="radio" name="salas_estar" value="1"><span>1</span></label><label><input type="radio" name="salas_estar" value="2"><span>2</span></label><label><input type="radio" name="salas_estar" value="3+"><span>3+</span></label></div></div>
-                    <div class="gc-group gc-full"><label>Comedores*</label><div class="gc-num-selector"><label><input type="radio" name="comedor" value="0"><span>0</span></label><label><input type="radio" name="comedor" value="1"><span>1</span></label><label><input type="radio" name="comedor" value="2"><span>2</span></label><label><input type="radio" name="comedor" value="3+"><span>3+</span></label></div></div>
-
-                    <div class="gc-group gc-full">
-                        <label>Estado de la Propiedad*</label>
-                        <div class="gc-option-grid">
-                            <label class="gc-option-item"><input type="radio" name="estado" value="Habitada"><span>🛋️ Habitada</span></label>
-                            <label class="gc-option-item"><input type="radio" name="estado" value="Desocupada"><span>🏠 Desocupada</span></label>
-                            <label class="gc-option-item"><input type="radio" name="estado" value="Post remodelación (Habitada)"><span>🔨 Post remodelación (Habitada)</span></label>
-                            <label class="gc-option-item"><input type="radio" name="estado" value="Post remodelación (Desocupada)"><span>🧹 Post remodelación (Desocupada)</span></label>
-                            <label class="gc-option-item"><input type="radio" name="estado" value="Post arrendatario"><span>🔑 Post arrendatario</span></label>
-                            <label class="gc-option-item"><input type="radio" name="estado" value="Nueva"><span>✨ Nueva</span></label>
-                        </div>
-                        <div id="remodelacion-box" style="display:none; margin-top:15px;">
-                            <label style="color:var(--brand-blue); font-size:12px; font-weight:800;">Detalles Obra / Construcción*</label>
-                            <textarea name="obs_remodelacion" class="gc-textarea" rows="2" placeholder="Describa el nivel de polvo, restos de cemento, pintura, etc."></textarea>
-                        </div>
-                    </div>
+        <!-- SECCIÓN DE INSTAGRAM (Look and Feel Sincronizado) -->
+        <div
+            class="bg-slate-50 border border-slate-100 rounded-[28px] p-6 md:p-8 flex flex-col sm:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-4 text-left">
+                <div
+                    class="w-12 h-12 bg-pink-50 text-pink-600 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                        <path
+                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-800 text-godark leading-none">Resultados de Antes y Después</h4>
+                    <p class="text-[11px] text-slate-400 font-bold mt-1 uppercase tracking-tighter">Mira nuestra galería
+                        de trabajos reales ejecutados en Santiago</p>
                 </div>
             </div>
-
-            <!-- SERVICIOS ESPECIALIZADOS -->
-            <label class="gc-toggle-card" id="card-especial">
-                <div class="gc-toggle-info"><h4>Servicios Especializados</h4><p>Servicios técnicos específicos: Vidrios, Alfombras, Tapices, Pulido, etc.</p></div>
-                <div class="gc-switch-container"><input type="checkbox" name="req_especial" id="req-especial" style="display:none"><span class="gc-switch-track"></span></div>
-            </label>
-
-            <div class="gc-conditional-content" id="content-especial">
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                    
-                    <div class="gc-special-wrapper">
-                        <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Limpieza de vidrios" id="chk-vidrios"><span>Limpieza de Vidrios</span></label>
-                        <div class="gc-sub-option" id="vidrios-box">
-                            <span class="gc-sub-title">Detalle de Ventanas</span>
-                            <div class="gc-grid">
-                                <div class="gc-group"><label>Cant. Ventanas</label><input type="number" name="qty_ventanas" class="gc-input" placeholder="Ej: 5"><span class="gc-helper-text">Nota: 2 paños = 1 ventana</span></div>
-                                <div class="gc-group"><label>Cant. Ventanales</label><input type="number" name="qty_ventanales" class="gc-input" placeholder="Ej: 2"><span class="gc-helper-text">Nota: 2 hojas = 1 ventanal</span></div>
-                                <div class="gc-group gc-full">
-                                    <label>Tipo Propiedad (Vidrios)</label>
-                                    <div class="gc-option-grid">
-                                        <label class="gc-option-item"><input type="radio" name="tipo_prop_vidrio" value="Casa" id="v-casa"><span>🏠 Casa</span></label>
-                                        <label class="gc-option-item"><input type="radio" name="tipo_prop_vidrio" value="Departamento" id="v-depto"><span>🏢 Depto</span></label>
-                                    </div>
-                                </div>
-                                <div id="v-pisos-box" class="gc-group gc-full" style="display:none">
-                                    <label>Pisos de la casa*</label>
-                                    <div class="gc-num-selector" style="max-width: 250px;">
-                                        <label><input type="radio" name="qty_pisos" value="1"><span>1</span></label><label><input type="radio" name="qty_pisos" value="2"><span>2</span></label><label><input type="radio" name="qty_pisos" value="3"><span>3</span></label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gc-special-wrapper">
-                        <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Lavado de alfombras" id="chk-alfombras"><span>Lavado de Alfombras</span></label>
-                        <div class="gc-sub-option" id="alfombras-box">
-                            <span class="gc-sub-title">Lista de Alfombras (Máx 5)</span>
-                            <div id="list-alf"></div>
-                            <div style="background:#fff; padding:15px; border-radius:12px; border:1px solid #eee;">
-                                <div class="gc-grid">
-                                    <div class="gc-group"><label>Material</label><select id="t-mat" class="gc-select"><option>Sintética</option><option>Lana</option><option>Yute</option></select></div>
-                                    <div class="gc-group"><label>Dimensiones</label><input type="text" id="t-dim" class="gc-input" placeholder="Ej: 2x3 mts"></div>
-                                </div>
-                                <button type="button" class="gc-btn-secondary" onclick="addA()">+ Agregar a la lista</button>
-                            </div>
-                            <input type="hidden" name="detalle_alfombras_json" id="json-alf">
-                        </div>
-                    </div>
-
-                    <div class="gc-special-wrapper">
-                        <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Limpieza de tapices" id="chk-tapices"><span>Limpieza de Tapices</span></label>
-                        <div class="gc-sub-option" id="tapices-box">
-                            <span class="gc-sub-title">Detalles de Tapiz</span>
-                            <div class="gc-grid">
-                                <div class="gc-group"><label>Mueble*</label><select name="mueble_tapiz" class="gc-select"><option value="">Elegir...</option><option>Sofá</option><option>Butaca</option><option>Sillas</option></select></div>
-                                <div class="gc-group"><label>Tipo de Tela*</label><input type="text" name="tela_tapiz" class="gc-input" placeholder="Ej: Lino, Felpa"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="gc-special-wrapper">
-                        <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Pulido de pisos" id="chk-pulido"><span>Pulido de Pisos</span></label>
-                        <div class="gc-sub-option" id="pulido-box">
-                            <label>Superficie a Tratar*</label>
-                            <select name="tipo_piso_pulido" class="gc-select">
-                                <option value="">Seleccionar material...</option><option>Piso Flotante</option><option>Parquet</option><option>Porcelanato</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="gc-special-wrapper">
-                        <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Limpieza de colchones" id="chk-colchones"><span>Limpieza de Colchones</span></label>
-                        <div class="gc-sub-option" id="colchones-box">
-                            <span class="gc-sub-title">Lista de Colchones (Máx 5)</span>
-                            <div id="list-col"></div>
-                            <div style="background:#fff; padding:15px; border-radius:12px; border:1px solid #eee;">
-                                <div class="gc-grid">
-                                    <div class="gc-group"><label>Tamaño</label><select id="t-size" class="gc-select"><option>1 Plaza</option><option>2 Plazas</option><option>King/S. King</option></select></div>
-                                    <div class="gc-group"><label>Cant.</label><input type="number" id="t-qty" class="gc-input" value="1"></div>
-                                </div>
-                                <button type="button" class="gc-btn-secondary" onclick="addCol()">+ Agregar a la lista</button>
-                            </div>
-                            <input type="hidden" name="detalle_colchones_json" id="json-col">
-                        </div>
-                    </div>
-
-                    <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Limpieza Locales Comerciales" id="chk-locales"><span>Locales Comerciales</span></label>
-                    <label class="gc-option-item"><input type="checkbox" name="servicios_extra[]" value="Limpieza de quincho" id="chk-quincho"><span>Limpieza de quincho</span></label>
-                </div>
-            </div>
+            <a href="https://www.instagram.com/goclean_santiago/" target="_blank"
+                class="w-full sm:w-auto text-center px-6 py-3.5 bg-white border border-slate-200 hover:border-pink-500 rounded-xl text-xs font-800 uppercase tracking-widest text-slate-600 hover:text-pink-600 transition-all duration-300">
+                Seguir en Instagram
+            </a>
         </div>
 
-        <!-- 3. DETALLES FINALES (Restaurado fielmente al v6.5 original) -->
-        <div class="gc-section">
-            <span class="gc-section-label">3. Detalles Finales</span>
-            <div class="gc-grid">
-                <div class="gc-group gc-full">
-                    <label>Imágenes de Referencia (Sugerido)</label>
-                    <div class="gc-upload-card">
-                        <svg class="gc-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7M16 5l2 2 4-4M21 11.5l-6.446-4.444a.5.5 0 0 0-.554 0L8 12M21 19l-5.336-4a.5.5 0 0 0-.596 0L5 21"/></svg>
-                        <span class="gc-upload-label">Subir imágenes (Máximo 5)</span>
-                        <input type="file" name="fotos_referencia[]" id="fotos" class="gc-file-hidden" multiple accept="image/*">
-                    </div>
-                    <div class="gc-preview-grid" id="preview"></div>
-                </div>
-                <div class="gc-group gc-full">
-                    <label>Comentarios Adicionales</label>
-                    <textarea name="comentarios" class="gc-textarea" rows="3" placeholder="Información técnica adicional relevante..."></textarea>
-                </div>
-            </div>
-            
-            <div class="gc-terms-row">
-                <input type="checkbox" id="terms" required>
-                <label for="terms">He leído y acepto los <a href="Términos y Condiciones de Tratamiento de Datos Personales.pdf" target="_blank">Términos y Condiciones de Tratamiento de Datos Personales</a> de Go Clean Santiago.</label>
-            </div>
-        </div>
+    </div>
 
-        <button type="submit" class="gc-btn" id="gc-submit">Enviar Solicitud de Cotización</button>
-    </form>
-</div>
+    <!-- Footer Simple -->
+    <footer class="text-center mt-10">
+        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest">
+            © 2026 Go Clean Santiago · Limpieza Profesional
+        </p>
+    </footer>
 
-<!-- Botón WhatsApp Clásico Verde -->
-<a href="https://wa.me/56953435938?text=Hola%20Go%20Clean,%20estoy%20en%20la%20web%20y%20me%20gustaría%20realizar%20una%20consulta%20sobre%20sus%20servicios." class="gc-whatsapp-float" target="_blank" aria-label="Contactar por WhatsApp">
-    <svg viewBox="0 0 448 512"><path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.7 17.7 69.1 27 106.2 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-5.5-2.8-23.2-8.5-44.2-27.1-16.4-14.6-27.4-32.7-30.6-38.1-3.2-5.5-.3-8.5 2.5-11.2 2.5-2.5 5.5-6.5 8.3-9.7 2.8-3.3 3.7-5.5 5.5-9.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 13.2 5.8 23.5 9.2 31.5 11.8 13.3 4.2 25.4 3.6 35 2.2 10.7-1.5 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-</a>
-
-<script>
-    const showError = (msgs) => {
-        const box = document.getElementById('gc-error-message');
-        box.innerHTML = `<strong>Atención:</strong> Por favor completa los siguientes campos obligatorios:<br><ul style='margin-top:10px; margin-left:20px; list-style:disc;'>${msgs.map(m => `<li>${m}</li>`).join('')}</ul>`;
-        box.style.display = 'block';
-        window.scrollTo({top: 0, behavior: 'smooth'});
-    };
-
-    const tel = document.getElementById('tel');
-    tel.oninput = () => { if(!tel.value.startsWith('+569')) tel.value='+569'; tel.value='+569'+tel.value.substring(4).replace(/\D/g,'').substring(0,8); };
-
-    function setup(chkId, condId, cardId) {
-        const c = document.getElementById(chkId), s = document.getElementById(condId), card = document.getElementById(cardId);
-        c.onchange = () => { s.style.display = c.checked ? 'block' : 'none'; card.classList.toggle('active', c.checked); };
-        card.onclick = (e) => { if(!['INPUT','SPAN','SELECT','TEXTAREA','BUTTON'].includes(e.target.tagName)) c.click(); };
-    }
-    setup('req-aseo', 'content-aseo', 'card-aseo');
-    setup('req-especial', 'content-especial', 'card-especial');
-
-    const bindSub = (chk, box) => { const el = document.getElementById(chk); if(el) el.onchange = (e) => document.getElementById(box).style.display = e.target.checked?'block':'none'; }
-    bindSub('chk-vidrios','vidrios-box'); bindSub('chk-alfombras','alfombras-box'); bindSub('chk-colchones','colchones-box'); bindSub('chk-tapices','tapices-box'); bindSub('chk-pulido','pulido-box');
-
-    document.querySelectorAll('input[name="tipo_vivienda"]').forEach(r => {
-        r.onchange = () => {
-            document.getElementById('pisos-vivienda-container').style.display = (r.value === 'Casa') ? 'block' : 'none';
-            document.getElementById('depto-options-container').style.display = (r.value === 'Departamento') ? 'block' : 'none';
-        };
-    });
-
-    document.getElementById('v-casa').onclick = () => document.getElementById('v-pisos-box').style.display = 'block';
-    document.getElementById('v-depto').onclick = () => document.getElementById('v-pisos-box').style.display = 'none';
-    document.querySelectorAll('input[name="estado"]').forEach(r => r.onchange = () => { document.getElementById('remodelacion-box').style.display = r.value.includes('remodelación') ? 'block' : 'none'; });
-
-    let aL = [], cL = [];
-    const renA = () => { document.getElementById('list-alf').innerHTML = aL.map((a,i) => `<div class="gc-list-item"><span>${a.material} (${a.dim})</span> <button type="button" onclick="aL.splice(${i},1);renA()">✕</button></div>`).join(''); document.getElementById('json-alf').value = JSON.stringify(aL); };
-    window.addA = () => { const d = document.getElementById('t-dim').value; if(d && aL.length < 5) { aL.push({material: document.getElementById('t-mat').value, dim: d}); renA(); document.getElementById('t-dim').value=''; } };
-    const renC = () => { document.getElementById('list-col').innerHTML = cL.map((c,i) => `<div class="gc-list-item"><span>${c.qty}x ${c.size}</span> <button type="button" onclick="cL.splice(${i},1);renC()">✕</button></div>`).join(''); document.getElementById('json-col').value = JSON.stringify(cL); };
-    window.addCol = () => { if(cL.length < 5) { cL.push({size: document.getElementById('t-size').value, qty: document.getElementById('t-qty').value}); renC(); } };
-
-    document.getElementById('fotos').onchange = (e) => { const p = document.getElementById('preview'); p.innerHTML = ''; Array.from(e.target.files).slice(0,5).forEach(f => { const r = new FileReader(); r.onload = x => p.innerHTML += `<div class="gc-preview-item"><img src="${x.target.result}"></div>`; r.readAsDataURL(f); }); };
-
-    document.getElementById('gc-modular-form').onsubmit = function(e) {
-        let errs = [];
-        if(!document.getElementById('nombre').value) errs.push("Nombre Completo");
-        if(tel.value.length < 12) errs.push("Teléfono (+569 + 8 dígitos)");
-        if(!document.getElementById('email').value) errs.push("Email de Contacto");
-        if(!document.getElementById('comuna').value) errs.push("Comuna del Servicio");
-        if(!document.getElementById('fecha').value) errs.push("Fecha Propuesta");
-        if(document.getElementById('req-aseo').checked) {
-            const t = document.querySelector('input[name="tipo_vivienda"]:checked');
-            if(!t) errs.push("Tipo de Vivienda"); else if(t.value==='Casa' && !document.querySelector('input[name="pisos_vivienda"]:checked')) errs.push("Cantidad de Pisos");
-            if(!document.getElementById('metros').value) errs.push("Metros Cuadrados");
-            if(!document.querySelector('input[name="dorm"]:checked')) errs.push("Cantidad de Dormitorios");
-            if(!document.querySelector('input[name="banos"]:checked')) errs.push("Cantidad de Baños");
-            if(!document.querySelector('input[name="estado"]:checked')) errs.push("Estado de la Propiedad");
-        }
-        if(!document.getElementById('terms').checked) errs.push("Aceptar los Términos y Condiciones");
-        if(errs.length > 0) { e.preventDefault(); showError(errs); }
-        else { document.getElementById('gc-submit').innerText = "Enviando Solicitud..."; }
-    };
-</script>
 </body>
+
 </html>
