@@ -1,0 +1,6 @@
+# PHP portable binaries
+php.zip
+php-bin/
+
+# Local data / CSV database
+base_cotizaciones.csv
