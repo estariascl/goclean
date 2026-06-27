@@ -350,8 +350,8 @@
       z-index: 1;
       width: 100%;
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 48px;
+      grid-template-columns: 1fr 90px 0.85fr;
+      gap: 32px;
       align-items: center;
       min-height: calc(100vh - 80px);
     }
@@ -362,6 +362,16 @@
         min-height: auto;
         padding: 60px 0;
       }
+      .hero-stats {
+        flex-direction: row;
+        border-left: none;
+        border-top: 2px solid var(--gogreen);
+        padding: 20px 0 0;
+        justify-content: space-around;
+      }
+      .hero-stats .stat { text-align: center; padding: 0 12px; }
+      .hero-stats .stat + .stat { border-top: none; border-left: 1px solid rgba(30,27,75,0.1); }
+      .hero-stats .stat-num { font-size: clamp(32px, 8vw, 44px); }
     }
 
     .hero-eyebrow {
@@ -479,43 +489,47 @@
     }
 
     .hero-stats {
-      position: absolute;
-      bottom: 24px;
-      left: 24px;
-      right: 24px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 20px;
-      border: 1px solid rgba(30, 27, 75, 0.05);
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      box-shadow: 0 10px 25px rgba(30, 27, 75, 0.04);
+      position: static;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-self: center;
+      background: transparent;
+      box-shadow: none;
+      border: none;
+      border-radius: 0;
+      padding: 0 0 0 24px;
+      border-left: 3px solid var(--gogreen);
+      gap: 0;
     }
 
     .stat {
-      text-align: center;
+      text-align: left;
+      padding: 18px 0;
     }
 
     .stat+.stat {
-      border-left: 1px solid rgba(30, 27, 75, 0.1);
+      border-left: none;
+      border-top: 1px solid rgba(30,27,75,0.08);
     }
 
     .stat-num {
-      font-family: var(--font-mono);
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--goblue);
+      font-family: var(--font-heading);
+      font-size: clamp(44px, 4.5vw, 64px);
+      font-weight: 900;
+      line-height: 1;
+      color: var(--godark);
       display: block;
+      letter-spacing: -0.03em;
     }
 
     .stat-label {
       font-family: var(--font-mono);
       font-size: 10px;
-      color: rgba(30, 27, 75, 0.4);
+      color: rgba(30,27,75,0.4);
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      margin-top: 2px;
+      margin-top: 6px;
       display: block;
     }
 
@@ -1622,17 +1636,27 @@
             <a href="#servicios" class="btn-secondary">Ver Servicios</a>
           </div>
         </div>
+                <!-- Stats: columna central vertical -->
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-num" data-target="99.9" data-suffix="%">0%</span>
+            <span class="stat-label">Satisfacción</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" data-target="2000" data-display="2K+" data-suffix="">0</span>
+            <span class="stat-label">Servicios</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" data-target="25" data-suffix="+">0+</span>
+            <span class="stat-label">Comunas</span>
+          </div>
+        </div>
         <div class="hero-img-wrap">
           <img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/6aaf81629_generated_ac269c2e.png"
             alt="Superficie de mármol impecablemente pulida" />
           <div class="hero-img-overlay"></div>
           <div class="hero-crosshair">
             <div class="hero-crosshair-dot"></div>
-          </div>
-          <div class="hero-stats">
-            <div class="stat"><span class="stat-num" data-target="99.9" data-suffix="%">0%</span><span class="stat-label">Satisfacción</span></div>
-            <div class="stat"><span class="stat-num" data-target="2000" data-display="2K+" data-suffix="">0</span><span class="stat-label">Servicios</span></div>
-            <div class="stat"><span class="stat-num" data-target="25" data-suffix="+">0+</span><span class="stat-label">Comunas</span></div>
           </div>
         </div>
       </div>
