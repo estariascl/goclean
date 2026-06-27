@@ -450,6 +450,34 @@
     }
     .wa-float.visible { opacity: 1; transform: scale(1); }
     .wa-float:hover { transform: scale(1.1); }
+    /* ── SERVICES LIST ── */
+    .services { padding: 100px 0; background: var(--surface); }
+    .services-header { margin-bottom: 48px; }
+    .services-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+    }
+    @media (max-width: 768px) { .services-grid { grid-template-columns: 1fr; } }
+    .service-card {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--white); border: 1px solid var(--border); border-radius: 18px;
+      padding: 20px 24px; text-decoration: none; color: var(--godark);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .service-card:hover {
+      border-color: var(--goblue); background: rgba(51,133,217,0.03);
+      transform: translateY(-2px); box-shadow: 0 8px 24px rgba(51,133,217,0.1);
+    }
+    .service-icon {
+      width: 48px; height: 48px; border-radius: 14px; background: var(--surface);
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+      flex-shrink: 0; transition: background 0.25s;
+    }
+    .service-card:hover .service-icon { background: rgba(51,133,217,0.1); }
+    .service-info { flex: 1; }
+    .service-info strong { display: block; font-size: 15px; font-weight: 800; margin-bottom: 2px; }
+    .service-info span { font-family: var(--font-mono); font-size: 11px; color: rgba(30,27,75,0.4); letter-spacing: 0.04em; }
+    .service-arrow { font-size: 18px; color: rgba(30,27,75,0.2); transition: all 0.25s; }
+    .service-card:hover .service-arrow { color: var(--goblue); transform: translateX(4px); }
   </style>
 </head>
 <body>
@@ -491,7 +519,7 @@
           No solo limpiamos. Restauramos la claridad, la salud y el orden de tu hogar u oficina con un estándar de limpieza profesional de alto rendimiento.
         </p>
         <div class="hero-btns">
-          <a href="https://wa.me/56953435938?text=Hola%20Go%20Clean,%20me%20gustar%C3%ADa%20cotizar%20un%20servicio." target="_blank" class="btn-primary">Solicitar Cotización</a>
+          <a href="https://www.gocleansantiago.cl/cotizar" class="btn-primary">Solicitar Cotización →</a>
           <a href="#servicios" class="btn-secondary">Ver Servicios</a>
         </div>
       </div>
@@ -509,7 +537,85 @@
   </div>
 </section>
 
-<!-- SERVICES OCULTO -->
+<!-- SERVICES -->
+<section class="services" id="servicios">
+  <div class="container">
+    <div class="services-header">
+      <div class="tag">Nuestros Servicios</div>
+      <h2>Todo lo que necesitas<br><span class="muted">en un solo lugar</span></h2>
+    </div>
+    <div class="services-grid">
+      <a href="https://www.gocleansantiago.cl/cotizar" class="service-card">
+        <div class="service-icon">🏠</div>
+        <div class="service-info">
+          <strong>Limpieza Profunda / Integral</strong>
+          <span>Casas &amp; Departamentos</span>
+        </div>
+        <div class="service-arrow">→</div>
+      </a>
+      <a href="https://www.gocleansantiago.cl/cotizar" class="service-card">
+        <div class="service-icon">🏢</div>
+        <div class="service-info">
+          <strong>Limpieza de Oficinas</strong>
+          <span>Espacios Corporativos</span>
+        </div>
+        <div class="service-arrow">→</div>
+      </a>
+      <a href="https://www.gocleansantiago.cl/cotizar" class="service-card">
+        <div class="service-icon">✨</div>
+        <div class="service-info">
+          <strong>Limpieza de Vidrios</strong>
+          <span>Transparencia Total</span>
+        </div>
+        <div class="service-arrow">→</div>
+      </a>
+      <a href="https://www.gocleansantiago.cl/cotizar" class="service-card">
+        <div class="service-icon">💧</div>
+        <div class="service-info">
+          <strong>Lavado de Alfombras</strong>
+          <span>Limpieza Profunda de Fibras</span>
+        </div>
+        <div class="service-arrow">→</div>
+      </a>
+      <a href="https://www.gocleansantiago.cl/cotizar" class="service-card">
+        <div class="service-icon">🛋️</div>
+        <div class="service-info">
+          <strong>Limpieza de Tapices</strong>
+          <span>Restauración de Muebles</span>
+        </div>
+        <div class="service-arrow">→</div>
+      </a>
+      <a href="https://www.gocleansantiago.cl/cotizar" class="service-card">
+        <div class="service-icon">⭕</div>
+        <div class="service-info">
+          <strong>Pulido de Pisos</strong>
+          <span>Restauración de Superficies</span>
+        </div>
+        <div class="service-arrow">→</div>
+      </a>
+      <a href="https://www.gocleansantiago.cl/cotizar" class="service-card">
+        <div class="service-icon">🛏️</div>
+        <div class="service-info">
+          <strong>Limpieza de Colchones</strong>
+          <span>Higiene para tu Descanso</span>
+        </div>
+        <div class="service-arrow">→</div>
+      </a>
+      <a href="https://www.gocleansantiago.cl/cotizar" class="service-card">
+        <div class="service-icon">🏪</div>
+        <div class="service-info">
+          <strong>Locales Comerciales</strong>
+          <span>Imagen Impecable</span>
+        </div>
+        <div class="service-arrow">→</div>
+      </a>
+    </div>
+    <div style="text-align:center;margin-top:48px;">
+      <a href="https://www.gocleansantiago.cl/cotizar" class="btn-primary">Cotizar Servicio →</a>
+    </div>
+  </div>
+</section>
+
 
 <!-- PROCESS -->
 <section class="process" id="proceso">
