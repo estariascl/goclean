@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>GoClean Santiago — Limpieza Profesional de Precisión</title>
+  <title>GoClean Santiago</title>
   <meta name="description" content="Servicio profesional de limpieza en Santiago de Chile. Limpieza profunda, vidrios, alfombras, tapices y más. Cotiza gratis." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -465,11 +465,10 @@
       <li><a href="#servicios">Servicios</a></li>
       <li><a href="#proceso">Proceso</a></li>
       <li><a href="#cobertura">Cobertura</a></li>
-      <li><a href="#testimonios">Reseñas</a></li>
     </ul>
     <div class="nav-cta">
       <a href="tel:+56953435938" class="nav-phone">+56 9 5343 5938</a>
-      
+      <a href="https://wa.me/56953435938?text=Hola%20Go%20Clean,%20me%20gustar%C3%ADa%20cotizar%20un%20servicio." target="_blank" class="btn-primary" style="padding:10px 22px;font-size:13px;">💬 Cotizar Gratis</a>
     </div>
   </div>
 </nav>
@@ -485,9 +484,8 @@
           <span>Limpieza de Precisión — Santiago, Chile</span>
         </div>
         <h1>
-          LA LIMPIEZA<br>
-          <span class="fade">CALCULADA</span><br>
-          DE SANTIAGO ✦
+          LA LIMPIEZA QUE BUSCAS
+          <span class="fade">EN SANTIAGO</span> ✦
         </h1>
         <p class="hero-desc">
           No solo limpiamos. Restauramos la claridad, la salud y el orden de tu hogar u oficina con un estándar de limpieza profesional de alto rendimiento.
@@ -594,23 +592,6 @@
   </div>
 </section>
 
-<!-- RESEÑAS GOOGLE -->
-<section class="testimonials" id="testimonios">
-  <div class="container">
-    <div class="testimonials-header">
-      <div class="tag" style="justify-content:center;">Reseñas Verificadas</div>
-      <h2>Lo que dicen nuestros clientes</h2>
-      <p style="font-size:16px;color:rgba(30,27,75,0.5);margin-top:16px;max-width:560px;margin-left:auto;margin-right:auto;">
-        Conoce la experiencia real de nuestros clientes a través de las reseñas en Google Business Profile.
-      </p>
-      <a href="https://share.google/qXta2umM63Dzdleld" target="_blank" rel="noopener noreferrer"
-        style="display:inline-flex;align-items:center;gap:12px;margin-top:32px;background:var(--goblue);color:white;font-weight:800;font-size:15px;padding:16px 36px;border-radius:999px;text-decoration:none;box-shadow:0 10px 24px rgba(51,133,217,0.25);transition:all 0.3s ease;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.186 4.114-3.478 0-6.3-2.822-6.3-6.3s2.822-6.3 6.3-6.3c1.63 0 3.106.625 4.22 1.644l3.14-3.14C19.1 2.457 15.86 1 12.24 1 5.766 1 .5 6.266.5 12.74S5.766 24.48 12.24 24.48c6.78 0 11.28-4.757 11.28-11.48 0-.771-.086-1.526-.223-2.215H12.24z"/></svg>
-        Ver Reseñas en Google
-      </a>
-    </div>
-  </div>
-</section>
 
 <!-- CONTACT OCULTO -->
 
@@ -636,8 +617,6 @@
           <li><a href="#servicios">Servicios</a></li>
           <li><a href="#proceso">Proceso</a></li>
           <li><a href="#cobertura">Cobertura</a></li>
-          <li><a href="#testimonios">Testimonios</a></li>
-          <li><a href="#contacto">Contacto</a></li>
         </ul>
       </div>
       <div>
@@ -699,58 +678,8 @@
       }
     }
 
-    // Cargar reseñas reales de Google desde el cache local si existe
-    fetch('google-reviews-cache.json')
-      .then(response => {
-        if (!response.ok) throw new Error('No cache file');
-        return response.json();
-      })
-      .then(data => {
-        const reviews = data.reviews || [];
-        if (reviews.length === 0) return;
-        
-        const grid = document.querySelector('.testimonials-grid');
-        if (!grid) return;
-        
-        // Filtrar por reseñas de 4 o 5 estrellas
-        const starsMapping = { "ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5 };
-        const filteredReviews = reviews
-          .filter(r => {
-            const score = starsMapping[r.starRating] || parseInt(r.starRating) || 5;
-            return score >= 4;
-          })
-          .slice(0, 4);
-          
-        if (filteredReviews.length === 0) return;
-        
-        grid.innerHTML = '';
-        
-        filteredReviews.forEach(r => {
-          const score = starsMapping[r.starRating] || parseInt(r.starRating) || 5;
-          const starsHtml = '★'.repeat(score) + '☆'.repeat(5 - score);
-          const comment = r.comment || 'Excelente servicio de limpieza, muy recomendados.';
-          const name = r.reviewer.displayName;
-          
-          const card = document.createElement('div');
-          card.className = 'tcard';
-          card.innerHTML = `
-            <div class="tcard-quote">“</div>
-            <p class="tcard-text">${comment}</p>
-            <div class="tcard-footer">
-              <div>
-                <div class="tcard-name">${name}</div>
-                <div class="tcard-meta">Google Business · Cliente Verificado</div>
-              </div>
-              <div class="tcard-stars">${starsHtml}</div>
-            </div>
-          `;
-          grid.appendChild(card);
-        });
-      })
-      .catch(err => {
-        console.log('Utilizando testimonios estáticos del estándar de GoClean:', err.message);
-      });
   });
+
 
 </script>
 </body>
