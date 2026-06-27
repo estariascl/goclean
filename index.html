@@ -280,7 +280,7 @@
 
     .nav-links {
       display: flex;
-      gap: 32px;
+      gap: 48px;
       list-style: none;
     }
 
@@ -350,8 +350,8 @@
       z-index: 1;
       width: 100%;
       display: grid;
-      grid-template-columns: 1fr 90px 0.85fr;
-      gap: 32px;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px;
       align-items: center;
       min-height: calc(100vh - 80px);
     }
@@ -363,15 +363,45 @@
         padding: 60px 0;
       }
       .hero-stats {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        top: auto;
+        transform: none;
         flex-direction: row;
-        border-left: none;
-        border-top: 2px solid var(--gogreen);
-        padding: 20px 0 0;
         justify-content: space-around;
+        padding: 12px;
+        border-radius: 16px;
+        background: rgba(30, 27, 75, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        gap: 0;
+        z-index: 10;
+        display: flex;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
       }
-      .hero-stats .stat { text-align: center; padding: 0 12px; }
-      .hero-stats .stat + .stat { border-top: none; border-left: 1px solid rgba(30,27,75,0.1); }
-      .hero-stats .stat-num { font-size: clamp(32px, 8vw, 44px); }
+      .hero-stats .stat { text-align: center; padding: 0 8px; }
+      .hero-stats .stat + .stat { border-top: none; border-left: 1px solid rgba(255, 255, 255, 0.15); }
+      .hero-stats .stat-num {
+        font-family: var(--font-heading);
+        font-size: clamp(20px, 5vw, 28px);
+        font-weight: 900;
+        line-height: 1;
+        color: var(--white);
+        display: block;
+        letter-spacing: -0.03em;
+      }
+      .hero-stats .stat-label {
+        font-family: var(--font-mono);
+        font-size: 9px;
+        color: rgba(255, 255, 255, 0.55);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-top: 4px;
+        display: block;
+      }
     }
 
     .hero-eyebrow {
@@ -489,36 +519,39 @@
     }
 
     .hero-stats {
-      position: static;
+      position: absolute;
+      left: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-self: center;
-      background: transparent;
-      box-shadow: none;
-      border: none;
-      border-radius: 0;
-      padding: 0 0 0 24px;
-      border-left: 3px solid var(--gogreen);
+      background: rgba(30, 27, 75, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 24px;
+      padding: 24px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
       gap: 0;
     }
 
     .stat {
       text-align: left;
-      padding: 18px 0;
+      padding: 16px 8px;
     }
 
     .stat+.stat {
       border-left: none;
-      border-top: 1px solid rgba(30,27,75,0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .stat-num {
       font-family: var(--font-heading);
-      font-size: clamp(44px, 4.5vw, 64px);
+      font-size: clamp(36px, 3.8vw, 48px);
       font-weight: 900;
       line-height: 1;
-      color: var(--godark);
+      color: var(--white);
       display: block;
       letter-spacing: -0.03em;
     }
@@ -526,10 +559,10 @@
     .stat-label {
       font-family: var(--font-mono);
       font-size: 10px;
-      color: rgba(30,27,75,0.4);
+      color: rgba(255, 255, 255, 0.55);
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      margin-top: 6px;
+      margin-top: 4px;
       display: block;
     }
 
@@ -733,7 +766,7 @@
     @media (max-width: 768px) {
       .process-steps {
         grid-template-columns: 1fr;
-        gap: 32px;
+        gap: 48px;
       }
     }
 
@@ -1636,27 +1669,27 @@
             <a href="#servicios" class="btn-secondary">Ver Servicios</a>
           </div>
         </div>
-                <!-- Stats: columna central vertical -->
-        <div class="hero-stats">
-          <div class="stat">
-            <span class="stat-num" data-target="99.9" data-suffix="%">0%</span>
-            <span class="stat-label">Satisfacción</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num" data-target="2000" data-display="2K+" data-suffix="">0</span>
-            <span class="stat-label">Servicios</span>
-          </div>
-          <div class="stat">
-            <span class="stat-num" data-target="25" data-suffix="+">0+</span>
-            <span class="stat-label">Comunas</span>
-          </div>
-        </div>
-        <div class="hero-img-wrap">
+                <div class="hero-img-wrap">
           <img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/6aaf81629_generated_ac269c2e.png"
             alt="Superficie de mármol impecablemente pulida" />
           <div class="hero-img-overlay"></div>
           <div class="hero-crosshair">
             <div class="hero-crosshair-dot"></div>
+          </div>
+          <!-- Stats: superpuestos sobre la imagen -->
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-num" data-target="99.9" data-suffix="%">0%</span>
+              <span class="stat-label">Satisfacción</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-target="2000" data-display="2K+" data-suffix="">0</span>
+              <span class="stat-label">Servicios</span>
+            </div>
+            <div class="stat">
+              <span class="stat-num" data-target="25" data-suffix="+">0+</span>
+              <span class="stat-label">Comunas</span>
+            </div>
           </div>
         </div>
       </div>
