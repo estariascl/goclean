@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GoClean — Google Business Profile Integration PoC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --goblue: #3385d9;        /* Azul GoClean (Agua, Limpieza) */
+      --gogreen: #6fc43c;       /* Verde GoClean (Frescura, Ecología) */
+      --godark: #1e1b4b;        /* Índigo oscuro premium */
+      --goslate: #0f172a;       /* Slate oscuro para fondos */
+      --gocard: #1e293b;        /* Tarjetas oscuras */
+      --goborder: #334155;      /* Bordes sutiles */
+      --white: #FFFFFF;
+      --surface: #f8fafc;
+      --font-heading: 'Inter Tight', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font-heading);
+      background: var(--goslate);
+      color: #e2e8f0;
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--goborder);
+      height: 80px; display: flex; align-items: center;
+    }
+    .header-inner {
+      width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .logo img { height: 40px; width: auto; border-radius: 8px; }
+    .logo-text { font-weight: 800; font-size: 20px; color: var(--white); letter-spacing: -0.5px; }
+    .logo-badge {
+      font-family: var(--font-mono); font-size: 9px; font-weight: 700;
+      background: rgba(51, 133, 217, 0.15); color: var(--goblue);
+      padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(51, 133, 217, 0.3);
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    
+    .status-badge {
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+      padding: 6px 14px; border-radius: 999px; background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--goborder);
+    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; }
+    .status-dot.connected { background: var(--gogreen); box-shadow: 0 0 10px var(--gogreen); }
+
+    /* ── CONTAINER ── */
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+    @media (max-width: 768px) { .container { padding: 0 20px; } }
+
+    /* ── HERO / INTRO ── */
+    .hero-poc {
+      padding: 48px 0 24px;
+      background: linear-gradient(180deg, rgba(30,27,75,0.4) 0%, transparent 100%);
+    }
+    h1 {
+      font-size: clamp(32px, 4vw, 48px); font-weight: 900; color: var(--white);
+      letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 8px;
+    }
+    h1 span { color: var(--goblue); }
+    .desc { font-size: 16px; color: #94a3b8; max-width: 700px; margin-bottom: 24px; }
+
+    /* ── CARDS & LAYOUT ── */
+    .dashboard-grid {
+      display: grid; grid-template-columns: 350px 1fr; gap: 32px;
+      margin-top: 24px; align-items: start;
+    }
+    @media (max-width: 992px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--gocard); border-radius: 20px; border: 1px solid var(--goborder);
+      padding: 28px; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      transition: border-color 0.3s;
+    }
+    .card:hover { border-color: rgba(51, 133, 217, 0.4); }
+    .card-title {
+      font-size: 18px; font-weight: 700; color: var(--white);
+      margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+      border-bottom: 1px solid var(--goborder); padding-bottom: 12px;
+    }
+
+    /* ── FORMS & INPUTS ── */
+    .form-group { margin-bottom: 20px; }
+    .form-label {
+      display: block; font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+      color: #94a3b8; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.05em;
+    }
+    .form-control, select {
+      width: 100%; background: rgba(15, 23, 42, 0.6); border: 1.5px solid var(--goborder);
+      border-radius: 12px; padding: 12px 16px; color: var(--white); font-size: 14px;
+      outline: none; transition: all 0.2s; font-family: var(--font-heading);
+    }
+    .form-control:focus, select:focus {
+      border-color: var(--goblue); box-shadow: 0 0 0 3px rgba(51, 133, 217, 0.25);
+    }
+    select option { background: var(--goslate); color: var(--white); }
+    
+    .btn-connect {
+      width: 100%; background: var(--goblue); color: var(--white);
+      font-weight: 700; font-size: 14px; padding: 14px; border-radius: 12px;
+      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      gap: 10px; transition: all 0.2s; text-decoration: none;
+      box-shadow: 0 4px 14px rgba(51, 133, 217, 0.3);
+    }
+    .btn-connect:hover {
+      background: var(--white); color: var(--godark);
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary {
+      background: transparent; border: 1px solid var(--goborder); color: #e2e8f0;
+      padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer;
+      font-size: 12px; display: inline-flex; align-items: center; gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--goblue); color: var(--goblue); }
+
+    /* ── CONNECTION STATE ── */
+    .connection-panel { display: flex; flex-direction: column; gap: 16px; }
+    .token-info {
+      font-family: var(--font-mono); font-size: 11px; background: rgba(15, 23, 42, 0.8);
+      border-radius: 8px; padding: 12px; border-left: 3px solid var(--goblue);
+      margin-top: 10px; word-break: break-all; color: #38bdf8;
+    }
+
+    /* ── STATS CARDS ── */
+    .stats-row {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: rgba(30, 41, 59, 0.5); border: 1px solid var(--goborder);
+      border-radius: 16px; padding: 16px; text-align: center;
+    }
+    .stat-num {
+      font-family: var(--font-mono); font-size: 24px; font-weight: 700;
+      color: var(--white); display: block;
+    }
+    .stat-num.stars { color: #f59e0b; }
+    .stat-label {
+      font-size: 11px; color: #94a3b8; text-transform: uppercase;
+      letter-spacing: 0.05em; margin-top: 4px; display: block;
+    }
+
+    /* ── REVIEWS VIEW ── */
+    .reviews-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px;
+    }
+    .reviews-list { display: flex; flex-direction: column; gap: 20px; }
+    
+    .review-card {
+      background: rgba(30, 41, 59, 0.4); border: 1px solid var(--goborder);
+      border-radius: 16px; padding: 24px; transition: transform 0.2s, border-color 0.2s;
+    }
+    .review-card:hover {
+      border-color: rgba(51, 133, 217, 0.3);
+      transform: translateY(-2px);
+    }
+    .review-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .reviewer-info { display: flex; align-items: center; gap: 12px; }
+    .reviewer-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--goblue) 0%, var(--gogreen) 100%);
+      color: var(--white); font-weight: 800; font-size: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .reviewer-name { font-weight: 700; color: var(--white); font-size: 14px; }
+    .reviewer-date { font-family: var(--font-mono); font-size: 11px; color: #64748b; }
+    
+    .stars-display { color: #f59e0b; font-size: 14px; letter-spacing: 2px; }
+
+    .review-text { font-size: 14px; color: #cbd5e1; line-height: 1.6; margin-bottom: 16px; }
+
+    /* ── REPLY SECTIONS ── */
+    .reply-box {
+      background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(51, 133, 217, 0.15);
+      border-radius: 12px; padding: 16px; margin-top: 16px;
+      border-left: 3px solid var(--gogreen);
+    }
+    .reply-header {
+      font-size: 12px; font-weight: 700; color: var(--gogreen);
+      margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
+    }
+    .reply-text { font-size: 13px; color: #94a3b8; }
+    
+    .reply-form { margin-top: 16px; }
+    .reply-input-group { display: flex; gap: 10px; }
+    .reply-input { flex: 1; padding: 10px 14px; border-radius: 8px; font-size: 13px; }
+    .btn-reply {
+      background: var(--gogreen); color: var(--godark); font-weight: 700;
+      padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer;
+      font-size: 12px; display: flex; align-items: center; gap: 6px;
+    }
+    .btn-reply:hover { background: var(--white); }
+
+    /* ── DEVELOPER TABS ── */
+    .dev-section { margin-top: 48px; border-top: 1px solid var(--goborder); padding-top: 40px; }
+    .dev-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; border-bottom: 1px solid var(--goborder); padding-bottom: 1px; }
+    .tab-btn {
+      background: transparent; border: none; color: #64748b; font-family: var(--font-mono);
+      font-size: 12px; font-weight: 600; padding: 10px 16px; cursor: pointer;
+      border-bottom: 2px solid transparent; transition: all 0.2s;
+    }
+    .tab-btn.active { color: var(--goblue); border-bottom-color: var(--goblue); }
+    .tab-content { display: none; background: #0b0f19; border-radius: 16px; padding: 24px; border: 1px solid var(--goborder); }
+    .tab-content.active { display: block; }
+
+    pre { font-family: var(--font-mono); font-size: 13px; color: #38bdf8; overflow-x: auto; line-height: 1.5; }
+    .code-comment { color: #64748b; }
+    
+    .empty-state {
+      text-align: center; padding: 48px 24px; border: 2px dashed var(--goborder);
+      border-radius: 16px; color: #64748b;
+    }
+    .empty-state-icon { font-size: 40px; margin-bottom: 12px; }
+
+    .toast {
+      position: fixed; bottom: 24px; right: 24px; background: var(--gocard);
+      border: 1px solid var(--goblue); color: var(--white); padding: 16px 24px;
+      border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 999;
+      opacity: 0; pointer-events: none; transform: translateY(20px); transition: all 0.3s;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <span class="logo-text">GoClean</span>
+        <span class="logo-badge">Reviews PoC</span>
+      </a>
+      <div class="status-badge">
+        <div id="statusDot" class="status-dot"></div>
+        <span id="statusText">Desconectado</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- HERO / INTRO -->
+    <section class="hero-poc">
+      <h1>Reseñas de <span>Google Business Profile</span> ✦</h1>
+      <p class="desc">
+        Esta Proof of Concept (PoC) demuestra la integración de la API de Google Business Profile para leer calificaciones y comentarios del negocio, permitiendo al equipo de GoClean responder comentarios desde la interfaz.
+      </p>
+    </section>
+
+    <!-- DASHBOARD LAYOUT -->
+    <div class="dashboard-grid">
+      
+      <!-- SIDEBAR: AUTH & SELECTORS -->
+      <aside class="sidebar">
+        
+        <!-- CARD: AUTENTICACIÓN -->
+        <div class="card" style="margin-bottom: 24px;">
+          <div class="card-title">
+            <span>🔑 Autenticación OAuth 2.0</span>
+          </div>
+          
+          <div class="connection-panel">
+            <div id="disconnectedState">
+              <p style="font-size: 13px; color: #94a3b8; margin-bottom: 16px;">
+                Conecta tu cuenta de Google con acceso a los perfiles de negocio de GoClean.
+              </p>
+              
+              <a href="google-reviews-auth.php" class="btn-connect" id="btnGoogleAuth">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.186 4.114-3.478 0-6.3-2.822-6.3-6.3s2.822-6.3 6.3-6.3c1.63 0 3.106.625 4.22 1.644l3.14-3.14C19.1 2.457 15.86 1 12.24 1 5.766 1 .5 6.266.5 12.74S5.766 24.48 12.24 24.48c6.78 0 11.28-4.757 11.28-11.48 0-.771-.086-1.526-.223-2.215H12.24z"/>
+                </svg>
+                Conectar vía Backend PHP
+              </a>
+              
+              <div style="margin: 20px 0; text-align: center; position: relative;">
+                <hr style="border: 0; border-top: 1px solid var(--goborder);">
+                <span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--gocard); padding: 0 10px; font-size: 11px; color: #64748b; font-family: var(--font-mono);">O BIEN</span>
+              </div>
+              
+              <div class="form-group">
+                <label class="form-label">Ingresar Token Manual</label>
+                <input type="text" id="manualTokenInput" class="form-control" placeholder="ya29.a0AfB_y..." style="font-family: var(--font-mono); font-size: 12px;">
+                <span style="font-size: 10px; color: #64748b; margin-top: 6px; display: block;">
+                  Copia un Token de Acceso desde el <a href="https://developers.google.com/oauthplayground" target="_blank" style="color: var(--goblue);">OAuth Playground</a>.
+                </span>
+              </div>
+              <button class="btn-connect" onclick="connectWithManualToken()" style="background: transparent; border: 1px solid var(--goblue); color: var(--goblue); box-shadow: none;">
+                Aplicar Token Manual
+              </button>
+            </div>
+            
+            <div id="connectedState" style="display: none;">
+              <div style="background: rgba(110, 196, 60, 0.1); border: 1px solid rgba(110, 196, 60, 0.3); border-radius: 12px; padding: 14px; margin-bottom: 16px;">
+                <span style="color: var(--gogreen); font-size: 12px; font-weight: 700; display: block; margin-bottom: 2px;">✓ Conexión Activa</span>
+                <span style="font-size: 11px; color: #94a3b8;">La autenticación con Google está completada.</span>
+              </div>
+              
+              <div class="form-group">
+                <span class="form-label">Token de Acceso</span>
+                <div id="tokenDisplay" class="token-info">No token</div>
+              </div>
+              
+              <div class="form-group">
+                <span class="form-label">Expiración</span>
+                <span id="expiryDisplay" style="font-family: var(--font-mono); font-size: 12px; color: #94a3b8;">--</span>
+              </div>
+              
+              <button class="btn-secondary" onclick="disconnectOAuth()" style="width: 100%; justify-content: center; border-color: #ef4444; color: #ef4444;">
+                Desconectar Cuenta
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD: SELECTORES DE NEGOCIO -->
+        <div class="card" id="selectorsCard" style="opacity: 0.5; pointer-events: none;">
+          <div class="card-title">
+            <span>🏢 Cuenta & Ubicación</span>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="accountSelect">Cuenta de Google</label>
+            <select id="accountSelect" onchange="handleAccountChange()">
+              <option value="">Selecciona una cuenta...</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="locationSelect">Perfil del Negocio (Ubicación)</label>
+            <select id="locationSelect" onchange="handleLocationChange()">
+              <option value="">Selecciona una ubicación...</option>
+            </select>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- MAIN CONTENT: STAST & REVIEWS LIST -->
+      <main class="main-content">
+        
+        <!-- MOCK DATA NOTICE -->
+        <div id="mockBanner" style="display:none; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 16px; padding: 16px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <span style="color: #f59e0b; font-weight: 700; font-size: 14px; display: block; margin-bottom: 2px;">⚡ Modo Demostración Activado</span>
+            <span style="font-size: 12px; color: #94a3b8;">Como no has conectado un perfil de Google Business real con permisos aprobados, estamos visualizando reseñas de prueba del estándar de GoClean.</span>
+          </div>
+          <button class="btn-secondary" onclick="loadRealApiStructureOrShowMock(true)" style="border-color: #f59e0b; color: #f59e0b;">
+            Refrescar / Reintentar API
+          </button>
+        </div>
+
+        <!-- MAIN DASHBOARD DATA -->
+        <div id="dashboardDataPanel" style="display: none;">
+          
+          <!-- STATS -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <span id="statAverageRating" class="stat-num stars">4.9</span>
+              <span class="stat-label">Calificación Promedio</span>
+            </div>
+            <div class="stat-card">
+              <span id="statTotalReviews" class="stat-num">--</span>
+              <span class="stat-label">Reseñas Totales</span>
+            </div>
+            <div class="stat-card">
+              <span id="statRepliedCount" class="stat-num">--</span>
+              <span class="stat-label">Respondidas</span>
+            </div>
+          </div>
+
+          <!-- LOCATIONS DETAIL -->
+          <div class="card" style="margin-bottom: 32px;">
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;">
+              <div>
+                <span class="logo-badge" style="background: rgba(110, 196, 60, 0.15); color: var(--gogreen); border-color: rgba(110,196,60,0.3); margin-bottom: 8px; display: inline-block;">Perfil Activo</span>
+                <h2 id="activeLocationTitle" style="font-size: 22px; font-weight: 800; color: var(--white); margin-bottom: 4px;">Nombre del Negocio</h2>
+                <p id="activeLocationAddress" style="font-size: 14px; color: #94a3b8;">Dirección del Local</p>
+              </div>
+              <div id="locationRatingBadge" style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: 12px; padding: 12px; text-align: center; min-width: 80px;">
+                <span style="font-size: 24px; font-weight: 900; color: #f59e0b; display: block; line-height: 1;">4.9</span>
+                <span style="font-size: 9px; color: #94a3b8; text-transform: uppercase; font-family: var(--font-mono); letter-spacing: 0.05em;">Google Score</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- REVIEWS LIST -->
+          <div>
+            <div class="reviews-header">
+              <h3 style="font-size: 18px; font-weight: 800; color: var(--white);">Listado de Reseñas de Clientes</h3>
+              <div style="display: flex; gap: 8px;">
+                <select id="reviewSortSelect" onchange="sortReviews()" style="padding: 6px 12px; font-size: 12px; width: auto; border-radius: 8px;">
+                  <option value="newest">Más recientes</option>
+                  <option value="highest">Mayor puntuación</option>
+                  <option value="lowest">Menor puntuación</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="reviewsListContainer" class="reviews-list">
+              <!-- Renderizado dinámico de reseñas -->
+            </div>
+          </div>
+
+        </div>
+
+        <div id="dashboardEmptyPanel" class="empty-state">
+          <div class="empty-state-icon">📡</div>
+          <h3>Esperando Autenticación</h3>
+          <p style="max-width: 400px; margin: 8px auto 0; font-size: 14px;">
+            Inicia sesión con tu cuenta de Google o ingresa un Token de Acceso para cargar las ubicaciones y reseñas de Google Business Profile.
+          </p>
+        </div>
+
+      </main>
+
+    </div>
+
+    <!-- DEVELOPER SECTION TABS -->
+    <section class="dev-section">
+      <div class="dev-header">
+        <h3 style="font-size: 20px; font-weight: 800; color: var(--white);">🛠 Centro de Inspección Técnica</h3>
+        <span class="logo-badge" style="background: rgba(245,158,11,0.1); color: #f59e0b; border-color: rgba(245,158,11,0.3);">Modo Desarrollador</span>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(event, 'tabExchangePhp')">Backend Exchange Helper (PHP)</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tabApiEndpoints')">Endpoints & Mapeo API</button>
+        <button class="tab-btn" onclick="switchTab(event, 'tabRawResponse')">Inspección de API Response (JSON)</button>
+      </div>
+
+      <!-- TAB: BACKEND PHP HELPER -->
+      <div id="tabExchangePhp" class="tab-content active">
+        <p style="font-size: 14px; color: #94a3b8; margin-bottom: 16px;">
+          En entornos de producción, el intercambio del código de autorización por el Access Token debe ocurrir del lado del servidor para proteger tu <strong>Client Secret</strong>. La PoC incluye este helper <code>google-reviews-auth.php</code> en la raíz:
+        </p>
+        <pre><code><span class="code-comment">&lt;?php</span>
+<span class="code-comment">// 1. Credenciales de la App de Google</span>
+$clientId = <span style="color: #a78bfa;">getenv('GOOGLE_CLIENT_ID')</span>;
+$clientSecret = <span style="color: #a78bfa;">getenv('GOOGLE_CLIENT_SECRET')</span>;
+$redirectUri = <span style="color: #a78bfa;">'http://'</span> . $_SERVER[<span style="color: #a78bfa;">'HTTP_HOST'</span>] . strtok($_SERVER[<span style="color: #a78bfa;">'REQUEST_URI'</span>], <span style="color: #a78bfa;">'?'</span>);
+
+<span class="code-comment">// 2. Intercambio de Código por Access Token</span>
+if (isset($_GET[<span style="color: #a78bfa;">'code'</span>])) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, <span style="color: #a78bfa;">'https://oauth2.googleapis.com/token'</span>);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query([
+        <span style="color: #a78bfa;">'code'</span> => $_GET[<span style="color: #a78bfa;">'code'</span>],
+        <span style="color: #a78bfa;">'client_id' => $clientId,
+        'client_secret' => $clientSecret,
+        'redirect_uri' => $redirectUri,
+        'grant_type' => 'authorization_code'</span>
+    ]));
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $data = json_decode(curl_exec($ch), true);
+    
+    <span class="code-comment">// El token resultante se guarda en la cookie / localStorage y se redirige</span>
+}</code></pre>
+      </div>
+
+      <!-- TAB: ENDPOINTS & MAPEO -->
+      <div id="tabApiEndpoints" class="tab-content">
+        <p style="font-size: 14px; color: #94a3b8; margin-bottom: 16px;">
+          Mapeo de llamadas consecutivas requeridas para pintar las reseñas del perfil de negocio:
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr; gap: 12px; font-family: var(--font-mono); font-size: 12px;">
+          <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 8px; border-left: 3px solid var(--goblue);">
+            <strong style="color: var(--white);">1. Listar Cuentas de Administrador:</strong><br>
+            GET https://mybusinessaccountmanagement.googleapis.com/v1/accounts
+          </div>
+          <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 8px; border-left: 3px solid var(--goblue);">
+            <strong style="color: var(--white);">2. Listar Ubicaciones por Cuenta:</strong><br>
+            GET https://mybusinessbusinessinformation.googleapis.com/v1/accounts/{accountId}/locations?readMask=name,title,storefrontAddress
+          </div>
+          <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 8px; border-left: 3px solid var(--goblue);">
+            <strong style="color: var(--white);">3. Listar Reseñas por Ubicación (Mantenido en v4):</strong><br>
+            GET https://mybusiness.googleapis.com/v4/accounts/{accountId}/locations/{locationId}/reviews
+          </div>
+          <div style="background: rgba(15,23,42,0.6); padding: 12px; border-radius: 8px; border-left: 3px solid var(--gogreen);">
+            <strong style="color: var(--white);">4. Responder a una Reseña Específica:</strong><br>
+            PUT https://mybusiness.googleapis.com/v4/accounts/{accountId}/locations/{locationId}/reviews/{reviewId}/reply<br>
+            Payload: { "comment": "Mi respuesta..." }
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: RAW RESPONSE INSPECTION -->
+      <div id="tabRawResponse" class="tab-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <p style="font-size: 14px; color: #94a3b8;">
+            Visualizador de la respuesta JSON real retornada por la API de Google seleccionada:
+          </p>
+          <div style="display: flex; gap: 8px;">
+            <button class="btn-secondary" onclick="inspectPayload('accounts')" style="padding: 4px 10px;">Cuentas</button>
+            <button class="btn-secondary" onclick="inspectPayload('locations')" style="padding: 4px 10px;">Ubicaciones</button>
+            <button class="btn-secondary" onclick="inspectPayload('reviews')" style="padding: 4px 10px;">Reseñas</button>
+          </div>
+        </div>
+        <pre><code id="jsonInspector">Se cargará el JSON de respuesta al seleccionar una ubicación y realizar llamadas...</code></pre>
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- TOAST NOTIFICATIONS -->
+  <div id="toast" class="toast">Notificación</div>
+
+  <!-- JS LOGIC -->
+  <script>
+    // State Variables
+    let accessToken = null;
+    let accountsData = [];
+    let locationsData = [];
+    let reviewsData = [];
+    let selectedAccountId = null;
+    let selectedLocationId = null;
+    
+    // Store original Google responses for the JSON Inspector
+    const rawResponses = {
+      accounts: null,
+      locations: null,
+      reviews: null
+    };
+
+    // Mock Data definition for elegant fallback
+    const mockAccounts = {
+      "accounts": [
+        {
+          "name": "accounts/11223344556677",
+          "accountName": "GoClean Chile",
+          "type": "PERSONAL",
+          "verificationState": "VERIFIED"
+        }
+      ]
+    };
+
+    const mockLocations = {
+      "locations": [
+        {
+          "name": "accounts/11223344556677/locations/9988776655",
+          "title": "GoClean Santiago — Casa Central",
+          "storefrontAddress": {
+            "addressLines": ["Av. Vitacura 4320, Oficina 502"],
+            "locality": "Vitacura",
+            "administrativeArea": "Región Metropolitana",
+            "postalCode": "7630000",
+            "country": "CL"
+          }
+        },
+        {
+          "name": "accounts/11223344556677/locations/1122334455",
+          "title": "GoClean Providencia — Bodega y Logística",
+          "storefrontAddress": {
+            "addressLines": ["Av. Providencia 1205"],
+            "locality": "Providencia",
+            "administrativeArea": "Región Metropolitana",
+            "postalCode": "7500000",
+            "country": "CL"
+          }
+        }
+      ]
+    };
+
+    const mockReviews = {
+      "reviews": [
+        {
+          "reviewId": "rev_01",
+          "reviewer": {
+            "displayName": "Catalina Gómez",
+            "profilePhotoUrl": ""
+          },
+          "starRating": "FIVE",
+          "comment": "Contraté la limpieza profunda para mi departamento antes de mudarme. Quedó espectacular, muy profesionales y limpios. Especial mención al detalle en los rieles de las ventanas.",
+          "createTime": "2026-06-21T14:32:00Z",
+          "reviewReply": {
+            "comment": "¡Muchas gracias Catalina! Nos alegra mucho saber que quedaste conforme con la limpieza. Éxito en tu nuevo departamento.",
+            "updateTime": "2026-06-21T18:10:00Z"
+          }
+        },
+        {
+          "reviewId": "rev_02",
+          "reviewer": {
+            "displayName": "Andrés Ovalle",
+            "profilePhotoUrl": ""
+          },
+          "starRating": "FIVE",
+          "comment": "Excelente servicio de lavado de alfombras y tapiz de sillón. El olor a limpio dura días. Muy recomendados para mantención en Santiago.",
+          "createTime": "2026-06-19T09:15:00Z"
+        },
+        {
+          "reviewId": "rev_03",
+          "reviewer": {
+            "displayName": "Mariana Riquelme",
+            "profilePhotoUrl": ""
+          },
+          "starRating": "FOUR",
+          "comment": "Muy buen servicio en general. Limpiaron vidrios de mi oficina rápido. El único detalle es que llegaron 15 minutos tarde por congestión en Vitacura, pero el resultado compensó el atraso.",
+          "createTime": "2026-06-15T16:45:00Z",
+          "reviewReply": {
+            "comment": "Hola Mariana, lamentamos el pequeño retraso debido al tráfico habitual en la zona. Nos complace saber que el trabajo cumplió con tu estándar de calidad.",
+            "updateTime": "2026-06-16T10:00:00Z"
+          }
+        },
+        {
+          "reviewId": "rev_04",
+          "reviewer": {
+            "displayName": "Juan Pablo Soto",
+            "profilePhotoUrl": ""
+          },
+          "starRating": "FIVE",
+          "comment": "Pulido de pisos flotantes impecable. Se nota que usan máquinas profesionales. Gran disposición de los muchachos que vinieron a la casa.",
+          "createTime": "2026-06-10T11:20:00Z"
+        }
+      ]
+    };
+
+    // Initialize PoC on Page Load
+    window.addEventListener('DOMContentLoaded', () => {
+      checkStoredToken();
+    });
+
+    // Check if token resides in local storage and is not expired
+    function checkStoredToken() {
+      const token = localStorage.getItem('g_reviews_access_token');
+      const expiry = localStorage.getItem('g_reviews_token_expiry');
+      
+      if (token && expiry) {
+        if (Date.now() < parseInt(expiry)) {
+          accessToken = token;
+          updateUIState(true);
+          showToast('Sesión OAuth recuperada exitosamente.');
+          loadRealApiStructureOrShowMock(false);
+          return;
+        } else {
+          showToast('La sesión de Google expiró. Inicia sesión nuevamente.', 'error');
+          disconnectOAuth();
+        }
+      }
+      
+      updateUIState(false);
+    }
+
+    // Connect with a manually inputted token
+    function connectWithManualToken() {
+      const token = document.getElementById('manualTokenInput').value.trim();
+      if (!token) {
+        showToast('Por favor, ingresa un token válido.', 'error');
+        return;
+      }
+      
+      accessToken = token;
+      // Set token validity to 1 hour (3600 seconds)
+      localStorage.setItem('g_reviews_access_token', token);
+      localStorage.setItem('g_reviews_token_expiry', (Date.now() + 3600 * 1000).toString());
+      
+      updateUIState(true);
+      showToast('Token manual aplicado.');
+      loadRealApiStructureOrShowMock(false);
+    }
+
+    // Disconnect OAuth & clean localstorage
+    function disconnectOAuth() {
+      accessToken = null;
+      localStorage.removeItem('g_reviews_access_token');
+      localStorage.removeItem('g_reviews_token_expiry');
+      localStorage.removeItem('g_reviews_refresh_token');
+      
+      // Clean selectors
+      document.getElementById('accountSelect').innerHTML = '<option value="">Selecciona una cuenta...</option>';
+      document.getElementById('locationSelect').innerHTML = '<option value="">Selecciona una ubicación...</option>';
+      
+      updateUIState(false);
+      showToast('Cuenta de Google desconectada.');
+    }
+
+    // Toggle CSS classes and visibility depending on auth state
+    function updateUIState(connected) {
+      const statusDot = document.getElementById('statusDot');
+      const statusText = document.getElementById('statusText');
+      const disconnectedState = document.getElementById('disconnectedState');
+      const connectedState = document.getElementById('connectedState');
+      const selectorsCard = document.getElementById('selectorsCard');
+      const dashboardEmptyPanel = document.getElementById('dashboardEmptyPanel');
+      const dashboardDataPanel = document.getElementById('dashboardDataPanel');
+      
+      if (connected) {
+        statusDot.classList.add('connected');
+        statusText.innerText = 'Conectado';
+        disconnectedState.style.display = 'none';
+        connectedState.style.display = 'block';
+        selectorsCard.style.opacity = '1';
+        selectorsCard.style.pointerEvents = 'auto';
+        
+        document.getElementById('tokenDisplay').innerText = accessToken.substring(0, 15) + '...';
+        
+        const expiry = localStorage.getItem('g_reviews_token_expiry');
+        if (expiry) {
+          const remainingMinutes = Math.round((parseInt(expiry) - Date.now()) / 1000 / 60);
+          document.getElementById('expiryDisplay').innerText = `Expira en aprox. ${remainingMinutes} min`;
+        }
+      } else {
+        statusDot.classList.remove('connected');
+        statusText.innerText = 'Desconectado';
+        disconnectedState.style.display = 'block';
+        connectedState.style.display = 'none';
+        selectorsCard.style.opacity = '0.5';
+        selectorsCard.style.pointerEvents = 'none';
+        dashboardEmptyPanel.style.display = 'block';
+        dashboardDataPanel.style.display = 'none';
+        document.getElementById('mockBanner').style.display = 'none';
+      }
+    }
+
+    // Main logic: Try to fetch real Google APIs, fall back to mock details if it fails
+    async function loadRealApiStructureOrShowMock(isManualRefresh = false) {
+      if (!accessToken) return;
+
+      try {
+        showToast('Llamando a las APIs de Google...');
+        
+        // Step 1: List Accounts
+        const responseAccounts = await fetch('https://mybusinessaccountmanagement.googleapis.com/v1/accounts', {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        
+        if (!responseAccounts.ok) {
+          throw new Error(`Google Accounts API error: HTTP ${responseAccounts.status}`);
+        }
+        
+        const accounts = await responseAccounts.json();
+        rawResponses.accounts = accounts;
+        
+        if (!accounts.accounts || accounts.accounts.length === 0) {
+          throw new Error('No se encontraron cuentas asociadas en este perfil de Google.');
+        }
+
+        // Fill Accounts selector
+        accountsData = accounts.accounts;
+        const accountSelect = document.getElementById('accountSelect');
+        accountSelect.innerHTML = '<option value="">Selecciona una cuenta...</option>';
+        accountsData.forEach(acc => {
+          accountSelect.innerHTML += `<option value="${acc.name}">${acc.accountName} (${acc.type})</option>`;
+        });
+        
+        // Auto-select first account if only one exists
+        if (accountsData.length === 1) {
+          accountSelect.value = accountsData[0].name;
+          handleAccountChange();
+        }
+        
+        document.getElementById('mockBanner').style.display = 'none';
+        showToast('Cuentas cargadas correctamente.');
+        
+      } catch (err) {
+        console.warn('Falla en la API de Google Real. Activando datos de prueba (Mock):', err);
+        // Fall back to Mock
+        loadMockData();
+        if (isManualRefresh) {
+          showToast('No se pudo conectar a la API real. Cargando datos locales.', 'error');
+        }
+      }
+    }
+
+    // Load Mock Data
+    function loadMockData() {
+      rawResponses.accounts = mockAccounts;
+      rawResponses.locations = mockLocations;
+      rawResponses.reviews = mockReviews;
+      
+      accountsData = mockAccounts.accounts;
+      
+      // Populate Account Selector
+      const accountSelect = document.getElementById('accountSelect');
+      accountSelect.innerHTML = '<option value="">Selecciona una cuenta...</option>';
+      accountsData.forEach(acc => {
+        accountSelect.innerHTML += `<option value="${acc.name}">${acc.accountName} (${acc.type}) [MOCK]</option>`;
+      });
+      
+      // Auto select
+      accountSelect.value = accountsData[0].name;
+      
+      // Populate Locations Selector
+      locationsData = mockLocations.locations;
+      const locationSelect = document.getElementById('locationSelect');
+      locationSelect.innerHTML = '<option value="">Selecciona una ubicación...</option>';
+      locationsData.forEach(loc => {
+        locationSelect.innerHTML += `<option value="${loc.name}">${loc.title} (${loc.storefrontAddress.locality}) [MOCK]</option>`;
+      });
+      
+      // Auto select first location
+      locationSelect.value = locationsData[0].name;
+      
+      // Display Banner
+      document.getElementById('mockBanner').style.display = 'flex';
+      
+      // Load UI statistics and reviews list
+      handleLocationChange();
+    }
+
+    // Event: Account select change
+    async function handleAccountChange() {
+      const accountName = document.getElementById('accountSelect').value;
+      if (!accountName) return;
+      
+      selectedAccountId = accountName.split('/').pop();
+      
+      // If we are in mock mode
+      if (document.getElementById('mockBanner').style.display === 'flex') {
+        return; // Already populated
+      }
+      
+      try {
+        showToast('Listando ubicaciones de la cuenta...');
+        const responseLocs = await fetch(`https://mybusinessbusinessinformation.googleapis.com/v1/accounts/${selectedAccountId}/locations?readMask=name,title,storefrontAddress`, {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        
+        if (!responseLocs.ok) {
+          throw new Error('Error al consultar ubicaciones.');
+        }
+        
+        const locs = await responseLocs.json();
+        rawResponses.locations = locs;
+        
+        locationsData = locs.locations || [];
+        const locationSelect = document.getElementById('locationSelect');
+        locationSelect.innerHTML = '<option value="">Selecciona una ubicación...</option>';
+        
+        if (locationsData.length === 0) {
+          showToast('Esta cuenta no tiene perfiles de negocio (ubicaciones) registrados.', 'error');
+          return;
+        }
+        
+        locationsData.forEach(loc => {
+          locationSelect.innerHTML += `<option value="${loc.name}">${loc.title} (${loc.storefrontAddress.locality})</option>`;
+        });
+        
+        if (locationsData.length === 1) {
+          locationSelect.value = locationsData[0].name;
+          handleLocationChange();
+        }
+      } catch (err) {
+        showToast(err.message, 'error');
+      }
+    }
+
+    // Event: Location select change
+    async function handleLocationChange() {
+      const locationName = document.getElementById('locationSelect').value;
+      if (!locationName) {
+        document.getElementById('dashboardDataPanel').style.display = 'none';
+        document.getElementById('dashboardEmptyPanel').style.display = 'block';
+        return;
+      }
+      
+      selectedLocationId = locationName.split('/').pop();
+      
+      // Find Selected Location object
+      const locationObj = locationsData.find(l => l.name === locationName);
+      
+      // Update UI Location details
+      document.getElementById('activeLocationTitle').innerText = locationObj.title;
+      const addr = locationObj.storefrontAddress;
+      document.getElementById('activeLocationAddress').innerText = `${addr.addressLines.join(', ')}, ${addr.locality}, ${addr.country}`;
+      
+      // Fetch reviews
+      await fetchReviewsForLocation();
+      
+      // Show main panel
+      document.getElementById('dashboardEmptyPanel').style.display = 'none';
+      document.getElementById('dashboardDataPanel').style.display = 'block';
+      
+      // Update inspector default
+      inspectPayload('reviews');
+    }
+
+    // Fetch reviews from API
+    async function fetchReviewsForLocation() {
+      // Check if we are in mock mode
+      if (document.getElementById('mockBanner').style.display === 'flex') {
+        reviewsData = [...mockReviews.reviews];
+        renderReviewsList();
+        calculateDashboardMetrics();
+        return;
+      }
+      
+      try {
+        showToast('Cargando comentarios desde Google...');
+        const url = `https://mybusiness.googleapis.com/v4/accounts/${selectedAccountId}/locations/${selectedLocationId}/reviews`;
+        const responseReviews = await fetch(url, {
+          headers: { 'Authorization': `Bearer ${accessToken}` }
+        });
+        
+        if (!responseReviews.ok) {
+          throw new Error('Google My Business Reviews API falló o requiere privilegios especiales.');
+        }
+        
+        const data = await responseReviews.json();
+        rawResponses.reviews = data;
+        
+        reviewsData = data.reviews || [];
+        renderReviewsList();
+        calculateDashboardMetrics();
+        showToast('Reseñas cargadas.');
+      } catch (err) {
+        console.warn('Fallo al cargar reseñas reales. Cargando Mock en su lugar.', err);
+        document.getElementById('mockBanner').style.display = 'flex';
+        reviewsData = [...mockReviews.reviews];
+        renderReviewsList();
+        calculateDashboardMetrics();
+      }
+    }
+
+    // Helper to generate reply section HTML for a review
+    function getReplySectionHtml(rev) {
+      if (rev.reviewReply && rev.reviewReply.comment) {
+        const commentEscaped = rev.reviewReply.comment.replace(/"/g, '&quot;');
+        return `
+          <div class="reply-box" id="replyBox_${rev.reviewId}">
+            <div class="reply-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+              <span>💬 Respuesta del Propietario (GoClean)</span>
+              <div class="reply-actions" style="display: flex; gap: 8px;">
+                <button class="btn-reply-action" onclick="startEditReply('${rev.reviewId}', &quot;${commentEscaped}&quot;)" style="background: transparent; border: none; color: #38bdf8; font-size: 11px; cursor: pointer; font-weight: 600; text-decoration: underline;">Editar</button>
+                <button class="btn-reply-action" onclick="deleteReply('${rev.reviewId}')" style="background: transparent; border: none; color: #ef4444; font-size: 11px; cursor: pointer; font-weight: 600; text-decoration: underline;">Eliminar</button>
+              </div>
+            </div>
+            <p class="reply-text" style="margin-top: 4px;">${rev.reviewReply.comment}</p>
+          </div>
+        `;
+      } else {
+        return `
+          <div class="reply-form" id="replyForm_${rev.reviewId}">
+            <div class="reply-input-group">
+              <input type="text" class="form-control reply-input" id="replyInput_${rev.reviewId}" placeholder="Escribe una respuesta profesional para agradecer o aclarar...">
+              <button class="btn-reply" onclick="submitReply('${rev.reviewId}')">Enviar Respuesta</button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Render reviews into DOM
+    function renderReviewsList() {
+      const container = document.getElementById('reviewsListContainer');
+      container.innerHTML = '';
+      
+      if (reviewsData.length === 0) {
+        container.innerHTML = '<div class="empty-state"><h4>Sin Reseñas</h4><p>No se encontraron comentarios para este perfil de negocio.</p></div>';
+        return;
+      }
+      
+      reviewsData.forEach(rev => {
+        // Star score mapping
+        const starsMapping = { "ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5 };
+        const score = starsMapping[rev.starRating] || parseInt(rev.starRating) || 5;
+        const starsHtml = '★'.repeat(score) + '☆'.repeat(5 - score);
+        
+        const formattedDate = new Date(rev.createTime).toLocaleDateString('es-CL', {
+          year: 'numeric', month: 'short', day: 'numeric'
+        });
+        
+        const initials = rev.reviewer.displayName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        
+        const replyHtml = getReplySectionHtml(rev);
+        
+        container.innerHTML += `
+          <div class="review-card">
+            <div class="review-meta">
+              <div class="reviewer-info">
+                <div class="reviewer-avatar">${initials}</div>
+                <div>
+                  <h4 class="reviewer-name">${rev.reviewer.displayName}</h4>
+                  <span class="reviewer-date">${formattedDate}</span>
+                </div>
+              </div>
+              <div class="stars-display">${starsHtml}</div>
+            </div>
+            <p class="review-text">${rev.comment || '<i>Sin comentario de texto.</i>'}</p>
+            <div id="replyContainer_${rev.reviewId}">
+              ${replyHtml}
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Start inline editing of a reply
+    function startEditReply(reviewId, currentComment) {
+      const container = document.getElementById(`replyContainer_${reviewId}`);
+      const commentEscaped = currentComment.replace(/"/g, '&quot;');
+      container.innerHTML = `
+        <div class="reply-form inline-edit" id="replyForm_${reviewId}">
+          <div class="reply-input-group" style="display: flex; gap: 10px;">
+            <input type="text" class="form-control reply-input" id="replyInput_${reviewId}" value="${commentEscaped}" style="flex: 1; padding: 10px 14px; border-radius: 8px; font-size: 13px;">
+            <button class="btn-reply" onclick="submitReply('${reviewId}')" style="background: var(--gogreen); color: var(--godark); font-weight: 700; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 12px;">Guardar</button>
+            <button class="btn-secondary" onclick="cancelEditReply('${reviewId}')" style="background: transparent; border: 1px solid var(--goborder); color: #e2e8f0; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 12px;">Cancelar</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // Cancel editing a reply
+    function cancelEditReply(reviewId) {
+      const matchedReview = reviewsData.find(r => r.reviewId === reviewId);
+      if (matchedReview) {
+        const container = document.getElementById(`replyContainer_${reviewId}`);
+        container.innerHTML = getReplySectionHtml(matchedReview);
+      }
+    }
+
+    // Delete a reply via Google API or mock
+    async function deleteReply(reviewId) {
+      if (!confirm('¿Estás seguro de que deseas eliminar esta respuesta?')) {
+        return;
+      }
+      
+      const replyContainer = document.getElementById(`replyContainer_${reviewId}`);
+      replyContainer.style.opacity = '0.5';
+      
+      // Show details in inspector
+      document.getElementById('jsonInspector').innerText = `// Enviando DELETE para eliminar respuesta...\nDELETE https://mybusiness.googleapis.com/v4/accounts/${selectedAccountId}/locations/${selectedLocationId}/reviews/${reviewId}/reply`;
+      switchTab(null, 'tabRawResponse');
+
+      // Check if we are in mock mode
+      if (document.getElementById('mockBanner').style.display === 'flex' || !accessToken) {
+        setTimeout(() => {
+          const matchedReview = reviewsData.find(r => r.reviewId === reviewId);
+          if (matchedReview) {
+            delete matchedReview.reviewReply;
+            replyContainer.style.opacity = '1';
+            replyContainer.innerHTML = getReplySectionHtml(matchedReview);
+          }
+          calculateDashboardMetrics();
+          showToast('Respuesta simulada eliminada.');
+        }, 800);
+        return;
+      }
+
+      // Real API Call
+      try {
+        const url = `https://mybusiness.googleapis.com/v4/accounts/${selectedAccountId}/locations/${selectedLocationId}/reviews/${reviewId}/reply`;
+        const response = await fetch(url, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('No se pudo eliminar la respuesta en la API de Google.');
+        }
+        
+        const matchedReview = reviewsData.find(r => r.reviewId === reviewId);
+        if (matchedReview) {
+          delete matchedReview.reviewReply;
+          replyContainer.style.opacity = '1';
+          replyContainer.innerHTML = getReplySectionHtml(matchedReview);
+        }
+        
+        calculateDashboardMetrics();
+        showToast('Respuesta eliminada en Google exitosamente.');
+      } catch (err) {
+        replyContainer.style.opacity = '1';
+        showToast(err.message, 'error');
+      }
+    }
+
+    // Sync reviews cache with web server
+    async function syncCacheWithWeb() {
+      const btn = document.getElementById('btnSyncCache');
+      const originalText = btn.innerText;
+      btn.innerText = '💾 Sincronizando...';
+      btn.disabled = true;
+      
+      try {
+        const response = await fetch('save-reviews-cache.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ reviews: reviewsData })
+        });
+        
+        if (!response.ok) {
+          throw new Error('El servidor falló al guardar el cache.');
+        }
+        
+        showToast('Reseñas sincronizadas con la web corporativa exitosamente.');
+      } catch (err) {
+        showToast('Error de sincronización: ' + err.message, 'error');
+      } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+      }
+    }
+
+    // Calculate Average rating, total and replies count
+    function calculateDashboardMetrics() {
+      const total = reviewsData.length;
+      
+      const starsMapping = { "ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5 };
+      let sum = 0;
+      let replied = 0;
+      
+      reviewsData.forEach(rev => {
+        const score = starsMapping[rev.starRating] || parseInt(rev.starRating) || 5;
+        sum += score;
+        if (rev.reviewReply && rev.reviewReply.comment) {
+          replied++;
+        }
+      });
+      
+      const avg = total > 0 ? (sum / total).toFixed(1) : "0.0";
+      
+      document.getElementById('statAverageRating').innerText = avg;
+      document.getElementById('statTotalReviews').innerText = total;
+      document.getElementById('statRepliedCount').innerText = `${replied} / ${total}`;
+      
+      // Update badge
+      document.getElementById('locationRatingBadge').querySelector('span').innerText = avg;
+    }
+
+    // Sort function for UI list
+    function sortReviews() {
+      const sortType = document.getElementById('reviewSortSelect').value;
+      const starsMapping = { "ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5 };
+      
+      if (sortType === 'newest') {
+        reviewsData.sort((a, b) => new Date(b.createTime) - new Date(a.createTime));
+      } else if (sortType === 'highest') {
+        reviewsData.sort((a, b) => (starsMapping[b.starRating] || 5) - (starsMapping[a.starRating] || 5));
+      } else if (sortType === 'lowest') {
+        reviewsData.sort((a, b) => (starsMapping[a.starRating] || 5) - (starsMapping[b.starRating] || 5));
+      }
+      
+      renderReviewsList();
+    }
+
+    // Send reply via API or simulate it
+    async function submitReply(reviewId) {
+      const input = document.getElementById(`replyInput_${reviewId}`);
+      const commentText = input.value.trim();
+      
+      if (!commentText) {
+        showToast('Escribe una respuesta antes de enviar.', 'error');
+        return;
+      }
+      
+      // Visual feedback
+      const replyContainer = document.getElementById(`replyContainer_${reviewId}`);
+      replyContainer.style.opacity = '0.5';
+      
+      // Payload structure
+      const payload = { "comment": commentText };
+      
+      // Show details in inspector
+      document.getElementById('jsonInspector').innerText = `// Payload enviado (PUT):\n${JSON.stringify(payload, null, 2)}`;
+      switchTab(null, 'tabRawResponse');
+
+      // Check if we are in mock mode
+      if (document.getElementById('mockBanner').style.display === 'flex' || !accessToken) {
+        // Simulate response from Google API
+        setTimeout(() => {
+          const matchedReview = reviewsData.find(r => r.reviewId === reviewId);
+          if (matchedReview) {
+            matchedReview.reviewReply = {
+              comment: commentText,
+              updateTime: new Date().toISOString()
+            };
+            replyContainer.style.opacity = '1';
+            replyContainer.innerHTML = getReplySectionHtml(matchedReview);
+          }
+          
+          calculateDashboardMetrics();
+          showToast('Respuesta simulada y actualizada.');
+        }, 800);
+        return;
+      }
+
+      // Real API Call
+      try {
+        const url = `https://mybusiness.googleapis.com/v4/accounts/${selectedAccountId}/locations/${selectedLocationId}/reviews/${reviewId}/reply`;
+        const response = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+          throw new Error('No se pudo enviar la respuesta a la API de Google.');
+        }
+        
+        const result = await response.json();
+        
+        // Update local object
+        const matchedReview = reviewsData.find(r => r.reviewId === reviewId);
+        if (matchedReview) {
+          matchedReview.reviewReply = result;
+          replyContainer.style.opacity = '1';
+          replyContainer.innerHTML = getReplySectionHtml(matchedReview);
+        }
+        
+        calculateDashboardMetrics();
+        showToast('Respuesta publicada en Google exitosamente.');
+      } catch (err) {
+        replyContainer.style.opacity = '1';
+        showToast(err.message, 'error');
+      }
+    }
+
+    // Tech Inspector panel payload switcher
+    function inspectPayload(type) {
+      const inspector = document.getElementById('jsonInspector');
+      if (rawResponses[type]) {
+        inspector.innerText = JSON.stringify(rawResponses[type], null, 2);
+      } else {
+        inspector.innerText = `No hay datos para la categoria "${type}" actualmente. Conectate y selecciona un negocio.`;
+      }
+    }
+
+    // Switch between tech inspector tabs
+    function switchTab(event, tabId) {
+      // Hide all tabs
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(c => c.classList.remove('active'));
+      
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach(b => b.classList.remove('active'));
+      
+      // Show active tab
+      document.getElementById(tabId).classList.add('active');
+      
+      if (event) {
+        event.currentTarget.classList.add('active');
+      } else {
+        // Find matching button by text or index
+        const buttonsArray = Array.from(buttons);
+        const match = buttonsArray.find(b => b.getAttribute('onclick').includes(tabId));
+        if (match) match.classList.add('active');
+      }
+    }
+
+    // Helper: Toast Notifications
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('toast');
+      toast.innerText = message;
+      toast.style.borderColor = type === 'error' ? '#ef4444' : 'var(--goblue)';
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

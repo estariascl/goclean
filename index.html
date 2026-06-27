@@ -1,217 +1,1106 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Go Clean Santiago - Limpieza Profesional de Alto Estándar</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>GoClean Santiago — Limpieza Profesional de Precisión</title>
+  <meta name="description" content="Servicio profesional de limpieza en Santiago de Chile. Limpieza profunda, vidrios, alfombras, tapices y más. Cotiza gratis." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
+    :root {
+      --goblue: #3385d9;        /* Azul oficial Go Clean (Agua, Limpieza, Confianza) */
+      --gogreen: #6fc43c;       /* Verde oficial Go Clean (Frescura, Ecología, Salud) */
+      --godark: #1e1b4b;        /* Índigo oscuro premium para máxima legibilidad */
+      --white: #FFFFFF;
+      --surface: #f8fafc;       /* Fondo limpio y descansado */
+      --border: #e2e8f0;
+      --font-heading: 'Inter Tight', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    html { scroll-behavior: smooth; }
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        goblue: '#3385d9',      // Azul institucional Go Clean
-                        godark: '#1e1b4b',      // Índigo oscuro premium
-                        gogreen: '#6fc43c',     // Verde acento de la marca
-                        gobg: '#f8fafc'         // Fondo ultra limpio
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    body {
+      font-family: var(--font-heading);
+      background: var(--white);
+      color: var(--godark);
+      line-height: 1.6;
+    }
 
-    <style>
-        body {
-            background-color: #f8fafc;
-            background-image: radial-gradient(#cbd5e1 0.6px, transparent 0.6px);
-            background-size: 24px 24px;
-        }
+    /* ── UTILITIES ── */
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
+    @media (max-width: 768px) { .container { padding: 0 20px; } }
 
-        .gc-main-card {
-            background: #ffffff;
-            border: 1px solid #f1f5f9;
-            box-shadow: 0 15px 35px rgba(51, 133, 217, 0.08);
-        }
+    .mono { font-family: var(--font-mono); }
+    .tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--goblue);
+      margin-bottom: 16px;
+    }
+    .tag::before { content: ''; width: 32px; height: 1px; background: var(--gogreen); display: block; }
 
-        .gc-choice-card {
-            background: #ffffff;
-            border: 2px solid #e2e8f0;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
+    .btn-primary {
+      display: inline-block; background: var(--goblue); color: var(--white);
+      font-family: var(--font-heading); font-weight: 800; font-size: 15px;
+      padding: 14px 32px; border-radius: 999px; border: none; cursor: pointer;
+      text-decoration: none; transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(51, 133, 217, 0.2);
+    }
+    .btn-primary:hover { 
+      background: var(--godark); 
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(30, 27, 75, 0.2); 
+    }
 
-        .gc-choice-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 40px rgba(51, 133, 217, 0.12);
-        }
+    .btn-secondary {
+      display: inline-block; border: 1.5px solid var(--border); color: var(--godark);
+      font-family: var(--font-heading); font-weight: 700; font-size: 15px;
+      padding: 14px 32px; border-radius: 999px; background: transparent; cursor: pointer;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-secondary:hover { 
+      border-color: var(--goblue); 
+      color: var(--goblue); 
+      background: rgba(51, 133, 217, 0.02);
+    }
 
-        .gc-choice-card.active-blue:hover {
-            border-color: #3385d9;
-        }
+    /* ── NAVBAR ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(255,255,255,0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(30,27,75,0.05);
+      height: 80px; display: flex; align-items: center;
+    }
+    .nav-inner {
+      width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 40px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo img { height: 48px; width: auto; }
+    .nav-logo-text { font-weight: 800; font-size: 18px; color: var(--godark); tracking: -0.5px; }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(30,27,75,0.5); text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--goblue); }
+    .nav-cta { display: flex; align-items: center; gap: 20px; }
+    .nav-phone { font-family: var(--font-mono); font-size: 12px; font-weight: 700; color: rgba(30,27,75,0.5); text-decoration: none; }
+    .nav-phone:hover { color: var(--goblue); }
+    @media (max-width: 900px) { .nav-links, .nav-phone { display: none; } }
 
-        .gc-choice-card.active-dark:hover {
-            border-color: #1e1b4b;
-        }
-    </style>
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding-top: 80px; background: var(--white); position: relative; overflow: hidden;
+    }
+    .hero-grid {
+      position: absolute; inset: 0; opacity: 0.04;
+      background-image: linear-gradient(#3385d9 1px, transparent 1px),
+        linear-gradient(90deg, #3385d9 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .hero-inner {
+      position: relative; z-index: 1; width: 100%;
+      display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px;
+      align-items: center; min-height: calc(100vh - 80px);
+    }
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; min-height: auto; padding: 60px 0; }
+    }
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 32px;
+    }
+    .hero-eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gogreen); }
+    .hero-eyebrow span {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--goblue);
+    }
+    h1 {
+      font-family: var(--font-heading); font-weight: 900;
+      font-size: clamp(42px, 6.5vw, 76px); line-height: 1.0;
+      letter-spacing: -0.04em; color: var(--godark); margin-bottom: 24px;
+    }
+    h1 .fade { color: rgba(30,27,75,0.35); }
+    .hero-desc {
+      font-size: 17px; line-height: 1.7; color: rgba(30,27,75,0.6);
+      max-width: 500px; margin-bottom: 40px;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .hero-img-wrap {
+      position: relative; border-radius: 32px; overflow: hidden;
+      aspect-ratio: 3/4;
+      box-shadow: 0 20px 40px rgba(30, 27, 75, 0.08);
+    }
+    @media (max-width: 900px) { .hero-img-wrap { aspect-ratio: 16/9; } }
+    .hero-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .hero-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(30,27,75,0.25), transparent 50%);
+    }
+    .hero-crosshair {
+      position: absolute; top: 33%; left: 50%; transform: translate(-50%, -50%);
+      width: 32px; height: 32px; border: 1px solid rgba(111,196,60,0.6);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      animation: pulse 2s infinite;
+    }
+    .hero-crosshair-dot { width: 6px; height: 6px; background: var(--gogreen); border-radius: 50%; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1)} 50%{opacity:0.6;transform:translate(-50%,-50%) scale(1.15)} }
+
+    .hero-stats {
+      position: absolute; bottom: 24px; left: 24px; right: 24px;
+      background: rgba(255,255,255,0.95); backdrop-filter: blur(12px);
+      border-radius: 20px; padding: 20px; border: 1px solid rgba(30,27,75,0.05);
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      box-shadow: 0 10px 25px rgba(30, 27, 75, 0.04);
+    }
+    .stat { text-align: center; }
+    .stat + .stat { border-left: 1px solid rgba(30,27,75,0.1); }
+    .stat-num {
+      font-family: var(--font-mono); font-size: 22px; font-weight: 700; color: var(--goblue);
+      display: block;
+    }
+    .stat-label {
+      font-family: var(--font-mono); font-size: 10px; color: rgba(30,27,75,0.4);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px; display: block;
+    }
+
+    /* ── SERVICES ── */
+    .services { padding: 100px 0; background: var(--surface); }
+    h2 {
+      font-family: var(--font-heading); font-weight: 900;
+      font-size: clamp(32px, 4vw, 52px); letter-spacing: -0.03em; line-height: 1.1;
+      color: var(--godark); margin-bottom: 16px;
+    }
+    h2 .muted { color: rgba(30,27,75,0.35); }
+    .services-header { margin-bottom: 48px; }
+
+    .accordion { border-radius: 24px; overflow: hidden; background: rgba(30,27,75,0.04); display: flex; flex-direction: column; gap: 1px; }
+    .acc-item { background: var(--white); }
+    .acc-header {
+      display: flex; align-items: center; gap: 16px; padding: 24px 28px;
+      cursor: pointer; user-select: none;
+    }
+    .acc-icon {
+      width: 44px; height: 44px; border-radius: 14px; background: var(--surface);
+      display: flex; align-items: center; justify-content: center; font-size: 20px;
+      flex-shrink: 0; transition: all 0.3s ease;
+    }
+    .acc-item.open .acc-icon { background: rgba(51,133,217,0.12); color: var(--goblue); }
+    .acc-title { flex: 1; }
+    .acc-title strong { font-size: 16px; font-weight: 800; color: var(--godark); display: block; }
+    .acc-title span { font-family: var(--font-mono); font-size: 11px; color: rgba(30,27,75,0.4); letter-spacing: 0.05em; }
+    .acc-toggle {
+      font-size: 22px; color: rgba(30,27,75,0.25); font-weight: 300;
+      transition: transform 0.25s;
+    }
+    .acc-item.open .acc-toggle { transform: rotate(45deg); color: var(--goblue); }
+    .acc-body { display: none; padding: 0 28px 28px; }
+    .acc-item.open .acc-body { display: grid; grid-template-columns: 2fr 3fr; gap: 24px; }
+    @media (max-width: 768px) { .acc-item.open .acc-body { grid-template-columns: 1fr; } }
+    .acc-img { border-radius: 16px; overflow: hidden; aspect-ratio: 4/3; }
+    .acc-img img { width: 100%; height: 100%; object-fit: cover; }
+    .acc-desc { font-size: 15px; color: rgba(30,27,75,0.6); line-height: 1.7; margin-bottom: 20px; }
+    .kpi-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .kpi {
+      background: rgba(111,196,60,0.12); color: #2e7d32;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+      padding: 6px 12px; border-radius: 999px;
+    }
+    .acc-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-weight: 800; font-size: 13px; color: var(--goblue);
+      text-decoration: none; margin-top: 12px; transition: color 0.2s;
+    }
+    .acc-link:hover { color: var(--godark); }
+
+    /* ── PROCESS ── */
+    .process { padding: 100px 0; background: var(--white); }
+    .process-header { text-align: center; margin-bottom: 64px; }
+    .process-tag { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; }
+    .process-tag::before, .process-tag::after { content: ''; width: 32px; height: 1px; background: var(--gogreen); display: block; }
+    .process-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    @media (max-width: 768px) { .process-steps { grid-template-columns: 1fr; gap: 32px; } }
+    .step { text-align: center; }
+    .step-icon {
+      width: 80px; height: 80px; border-radius: 24px; background: var(--surface);
+      display: flex; align-items: center; justify-content: center; font-size: 28px;
+      margin: 0 auto 24px; position: relative;
+      border: 1px solid rgba(30,27,75,0.03);
+    }
+    .step-num {
+      position: absolute; top: -8px; right: -8px; width: 24px; height: 24px;
+      background: var(--godark); color: var(--gogreen); font-family: var(--font-mono);
+      font-size: 10px; font-weight: 800; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .step h3 { font-size: 20px; font-weight: 800; margin-bottom: 12px; color: var(--godark); }
+    .step p { font-size: 15px; color: rgba(30,27,75,0.5); line-height: 1.7; max-width: 280px; margin: 0 auto; }
+
+    /* ── BEFORE/AFTER ── */
+    .ba-section { padding: 100px 0; background: var(--godark); position: relative; }
+    .ba-section .container { text-align: center; }
+    .ba-tag { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; }
+    .ba-tag::before, .ba-tag::after { content: ''; width: 32px; height: 1px; background: var(--gogreen); display: block; }
+    .ba-tag span { font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.4); letter-spacing: 0.12em; text-transform: uppercase; }
+    .ba-section h2 { color: white; }
+    .ba-section .ba-sub { color: rgba(255,255,255,0.5); margin-bottom: 48px; font-size: 16px; }
+
+    .slider-wrap {
+      position: relative; border-radius: 24px; overflow: hidden;
+      aspect-ratio: 16/9; max-width: 900px; margin: 0 auto; cursor: col-resize;
+      user-select: none;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+    }
+    .slider-after, .slider-before {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+    }
+    .slider-after img, .slider-before img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .slider-before { clip-path: inset(0 50% 0 0); }
+    .slider-line {
+      position: absolute; top: 0; bottom: 0; width: 3px; background: var(--goblue);
+      left: 50%; transform: translateX(-50%); z-index: 10;
+    }
+    .slider-handle {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 48px; height: 48px; background: var(--gogreen); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(111,196,60,0.4); cursor: grab;
+      font-size: 18px; color: var(--godark); font-weight: 800;
+    }
+    .slider-label-before, .slider-label-after {
+      position: absolute; top: 16px; z-index: 11;
+      font-family: var(--font-mono); font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 6px 14px; border-radius: 999px;
+    }
+    .slider-label-before { left: 16px; background: rgba(30,27,75,0.75); color: rgba(255,255,255,0.8); }
+    .slider-label-after { right: 16px; background: var(--gogreen); color: var(--godark); }
+
+    /* ── COVERAGE ── */
+    .coverage { padding: 100px 0; background: var(--surface); }
+    .coverage-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+    @media (max-width: 900px) { .coverage-inner { grid-template-columns: 1fr; } }
+    .coverage-img { border-radius: 24px; overflow: hidden; aspect-ratio: 16/9; position: relative; box-shadow: 0 15px 30px rgba(30,27,75,0.05); }
+    .coverage-img img { width: 100%; height: 100%; object-fit: cover; }
+    .coverage-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(30,27,75,0.6), transparent 60%);
+    }
+    .coverage-location {
+      position: absolute; bottom: 20px; left: 20px;
+      display: flex; align-items: center; gap: 8px;
+      font-weight: 800; font-size: 17px; color: white;
+    }
+    .coverage-desc { font-size: 16px; color: rgba(30,27,75,0.5); line-height: 1.7; margin-bottom: 28px; max-width: 440px; }
+    .zone-group { margin-bottom: 24px; }
+    .zone-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(30,27,75,0.35); margin-bottom: 10px; }
+    .zone-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .zone-tag {
+      font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+      padding: 6px 14px; border-radius: 999px;
+    }
+    .zone-tag.primary { background: rgba(51,133,217,0.12); color: var(--goblue); }
+    .zone-tag.secondary { border: 1px solid rgba(30,27,75,0.12); color: rgba(30,27,75,0.5); }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { padding: 100px 0; background: var(--white); }
+    .testimonials-header { text-align: center; margin-bottom: 56px; }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    @media (max-width: 768px) { .testimonials-grid { grid-template-columns: 1fr; } }
+    .tcard {
+      background: var(--surface); border-radius: 24px; padding: 36px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid #f1f5f9;
+    }
+    .tcard:hover { background: var(--goblue); transform: translateY(-4px); box-shadow: 0 15px 30px rgba(51,133,217,0.15); }
+    .tcard:hover .tcard-text, .tcard:hover .tcard-name { color: white; }
+    .tcard:hover .tcard-meta { color: rgba(255,255,255,0.6); }
+    .tcard:hover .tcard-quote { color: rgba(255,255,255,0.25); }
+    .tcard-quote { font-size: 36px; color: rgba(51,133,217,0.25); line-height: 1; margin-bottom: 16px; transition: color 0.4s; }
+    .tcard-text { font-size: 15px; color: rgba(30,27,75,0.65); line-height: 1.75; margin-bottom: 24px; transition: color 0.4s; }
+    .tcard-footer { display: flex; justify-content: space-between; align-items: center; }
+    .tcard-name { font-weight: 800; font-size: 14px; color: var(--godark); transition: color 0.4s; }
+    .tcard-meta { font-family: var(--font-mono); font-size: 11px; color: rgba(30,27,75,0.4); margin-top: 2px; transition: color 0.4s; }
+    .tcard-stars { color: var(--gogreen); font-size: 14px; letter-spacing: 2px; }
+
+    /* ── CONTACT ── */
+    .contact { padding: 100px 0; background: var(--surface); }
+    .contact-inner { display: grid; grid-template-columns: 2fr 3fr; gap: 64px; }
+    @media (max-width: 900px) { .contact-inner { grid-template-columns: 1fr; } }
+    .contact-desc { font-size: 16px; color: rgba(30,27,75,0.5); line-height: 1.7; margin-bottom: 40px; max-width: 360px; }
+    .contact-info { display: flex; flex-direction: column; gap: 20px; }
+    .cinfo-item { display: flex; align-items: center; gap: 16px; text-decoration: none; }
+    .cinfo-icon {
+      width: 48px; height: 48px; border-radius: 14px; background: rgba(30,27,75,0.05);
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+      transition: background 0.2s; flex-shrink: 0;
+    }
+    .cinfo-item:hover .cinfo-icon { background: rgba(51,133,217,0.12); }
+    .cinfo-label { font-weight: 800; font-size: 14px; color: var(--godark); }
+    .cinfo-value { font-family: var(--font-mono); font-size: 12px; color: rgba(30,27,75,0.4); }
+
+    .form-card { background: var(--white); border-radius: 28px; padding: 40px; border: 1px solid #f1f5f9; box-shadow: 0 15px 30px rgba(30,27,75,0.03); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { margin-bottom: 20px; }
+    .form-label {
+      display: block; font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; color: rgba(30,27,75,0.4);
+      margin-bottom: 6px;
+    }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; background: var(--surface); border: 1.5px solid #f1f5f9; border-radius: 14px;
+      padding: 12px 16px; font-family: var(--font-heading); font-size: 14px; color: var(--godark);
+      outline: none; transition: all 0.2s; appearance: none;
+    }
+    .form-input::placeholder, .form-textarea::placeholder { color: rgba(30,27,75,0.25); }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--goblue); background-color: var(--white); box-shadow: 0 0 0 4px rgba(51,133,217,0.1); }
+    .form-textarea { resize: none; }
+    
+    .form-submit {
+      width: 100%; background: var(--goblue); color: var(--white);
+      font-family: var(--font-heading); font-weight: 800; font-size: 15px;
+      padding: 16px; border-radius: 999px; border: none; cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      box-shadow: 0 10px 20px rgba(51,133,217,0.15);
+    }
+    .form-submit:hover { background: var(--godark); box-shadow: 0 12px 24px rgba(30,27,75,0.2); }
+    
+    .form-legal {
+      font-family: var(--font-mono); font-size: 10px; color: rgba(30,27,75,0.25);
+      text-align: center; margin-top: 12px; letter-spacing: 0.05em;
+    }
+    .form-success {
+      text-align: center; padding: 48px 20px; display: none;
+    }
+    .form-success-icon {
+      width: 64px; height: 64px; border-radius: 50%; background: rgba(111,196,60,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; margin: 0 auto 20px;
+    }
+    .form-success h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; color: var(--godark); }
+    .form-success p { font-size: 15px; color: rgba(30,27,75,0.5); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--godark); color: white;
+      border-top: 2px solid transparent;
+      border-image: linear-gradient(to right, transparent, var(--gogreen), transparent) 1;
+    }
+    .footer-inner {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px;
+      padding: 72px 0 48px;
+    }
+    @media (max-width: 900px) { .footer-inner { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { .footer-inner { grid-template-columns: 1fr; } }
+    .footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .footer-logo img { height: 44px; width: auto; }
+    .footer-logo-text { font-weight: 800; font-size: 18px; }
+    .footer-tagline { font-size: 14px; color: rgba(255,255,255,0.35); line-height: 1.6; margin-bottom: 20px; }
+    .footer-socials { display: flex; gap: 10px; }
+    .social-btn {
+      width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.06);
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+      text-decoration: none; transition: background 0.2s;
+    }
+    .social-btn:hover { background: rgba(51,133,217,0.2); }
+    .footer-col-title {
+      font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.25);
+      margin-bottom: 20px;
+    }
+    .footer-links { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-links a {
+      font-size: 14px; color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gogreen); }
+    .footer-wa {
+      background: rgba(37,211,102,0.1); border-radius: 12px; padding: 16px;
+      text-decoration: none; display: block; transition: background 0.2s; margin-bottom: 12px;
+    }
+    .footer-wa:hover { background: rgba(37,211,102,0.2); }
+    .footer-wa strong { display: block; font-size: 14px; color: white; margin-bottom: 2px; }
+    .footer-wa span { font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.35); }
+    .footer-hours { font-family: var(--font-mono); font-size: 12px; color: rgba(255,255,255,0.25); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.05); padding: 24px 0;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+    }
+    .footer-copy { font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.2); }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a { font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.2); text-decoration: none; transition: color 0.2s; }
+    .footer-legal a:hover { color: rgba(255,255,255,0.4); }
+
+    /* ── FLOATING WA ── */
+    .wa-float {
+      position: fixed; bottom: 24px; right: 24px; z-index: 200;
+      width: 56px; height: 56px; border-radius: 50%; background: #25D366;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.35); text-decoration: none;
+      font-size: 26px; opacity: 0; transition: opacity 0.3s, transform 0.2s;
+      transform: scale(0.85);
+    }
+    .wa-float.visible { opacity: 1; transform: scale(1); }
+    .wa-float:hover { transform: scale(1.1); }
+  </style>
 </head>
+<body>
 
-<body class="antialiased min-h-screen py-10 px-4 flex flex-col justify-between">
+<!-- NAVBAR -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <img src="go.jpeg" alt="Go Clean Logo" onerror="this.style.display='none'" />
+      <span class="nav-logo-text">GoClean</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#proceso">Proceso</a></li>
+      <li><a href="#cobertura">Cobertura</a></li>
+      <li><a href="#testimonios">Testimonios</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="tel:+56953435938" class="nav-phone">+56 9 5343 5938</a>
+      <a href="#contacto" class="btn-primary" style="padding:10px 22px;font-size:13px;">Cotizar Gratis</a>
+    </div>
+  </div>
+</nav>
 
-    <!-- CONTENEDOR CENTRAL (Look and Feel idéntico al Cotizador) -->
-    <div class="max-w-[950px] w-full mx-auto gc-main-card rounded-[40px] p-8 md:p-14">
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">
+          <div class="hero-eyebrow-dot"></div>
+          <span>Limpieza de Precisión — Santiago, Chile</span>
+        </div>
+        <h1>
+          LA LIMPIEZA<br>
+          <span class="fade">CALCULADA</span><br>
+          DE SANTIAGO ✦
+        </h1>
+        <p class="hero-desc">
+          No solo limpiamos. Restauramos la claridad, la salud y el orden de tu hogar u oficina con un estándar de limpieza profesional de alto rendimiento.
+        </p>
+        <div class="hero-btns">
+          <a href="#contacto" class="btn-primary">Solicitar Cotización Gratis</a>
+          <a href="#servicios" class="btn-secondary">Ver Servicios</a>
+        </div>
+      </div>
+      <div class="hero-img-wrap">
+        <img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/6aaf81629_generated_ac269c2e.png" alt="Superficie de mármol impecablemente pulida" />
+        <div class="hero-img-overlay"></div>
+        <div class="hero-crosshair"><div class="hero-crosshair-dot"></div></div>
+        <div class="hero-stats">
+          <div class="stat"><span class="stat-num">99.9%</span><span class="stat-label">Satisfacción</span></div>
+          <div class="stat"><span class="stat-num">2K+</span><span class="stat-label">Servicios</span></div>
+          <div class="stat"><span class="stat-num">25+</span><span class="stat-label">Comunas</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <!-- Logotipo Oficial de Go Clean -->
-        <div class="text-center mb-8">
-            <img src="go.jpeg" alt="Go Clean Logo" class="mx-auto h-24 w-auto mb-6 drop-shadow-sm">
-            <div
-                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-goblue text-[11px] font-900 uppercase tracking-widest">
-                <span class="w-2 h-2 rounded-full bg-goblue animate-pulse"></span> Servicios Profesionales Santiago
+<!-- SERVICES -->
+<section class="services" id="servicios">
+  <div class="container">
+    <div class="services-header">
+      <div class="tag">Matriz de Servicios</div>
+      <h2>Cada espacio merece<br><span class="muted">un tratamiento preciso</span></h2>
+    </div>
+    <div class="accordion">
+
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(this)">
+          <div class="acc-icon">🏠</div>
+          <div class="acc-title"><strong>Limpieza Profunda / Integral</strong><span>Casas & Departamentos</span></div>
+          <div class="acc-toggle">+</div>
+        </div>
+        <div class="acc-body">
+          <div class="acc-img"><img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/ca1e9db09_generated_9f2095a8.png" alt="Limpieza Profunda" /></div>
+          <div>
+            <p class="acc-desc">Restauración integral para mudanzas, propiedades vacías o mantenimientos totales. Cada superficie, rincón y detalle recibe atención de precisión.</p>
+            <div class="kpi-list">
+              <span class="kpi">99.9% Eliminación de Alérgenos</span>
+              <span class="kpi">Sanitización Profunda</span>
+              <span class="kpi">Certificado de Limpieza</span>
             </div>
+            <a href="#contacto" class="acc-link">Cotizar este servicio →</a>
+          </div>
         </div>
+      </div>
 
-        <!-- Mensaje de Impacto -->
-        <header class="text-center max-w-2xl mx-auto mb-12">
-            <h1 class="text-3xl md:text-4xl font-900 text-godark tracking-tight leading-tight mb-4">
-                ¿Qué tipo de espacio <br class="hidden sm:block">
-                <span class="text-goblue">necesitas limpiar hoy?</span>
-            </h1>
-            <p class="text-slate-500 font-medium text-sm md:text-base leading-relaxed">
-                Selecciona una de nuestras áreas de especialidad para iniciar tu cotización personalizada con el
-                estándar operativo de Go Clean.
-            </p>
-        </header>
-
-        <!-- SECCIÓN DE SELECCIÓN (Foco de Cotización) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-
-            <!-- Opción Residencial -->
-            <section class="gc-choice-card active-blue p-8 rounded-[32px] flex flex-col justify-between h-full">
-                <div>
-                    <!-- Icono Casa -->
-                    <div class="w-14 h-14 bg-blue-50 text-goblue rounded-2xl flex items-center justify-center mb-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                        </svg>
-                    </div>
-                    <span class="text-[10px] font-900 text-goblue uppercase tracking-widest block mb-1">Para
-                        Particulares</span>
-                    <h3 class="text-2xl font-900 text-godark mb-4 tracking-tight">Servicio Residencial</h3>
-                    <p class="text-slate-500 text-xs md:text-sm leading-relaxed mb-6 font-medium">
-                        Cotiza en línea y de forma modular la limpieza de tu casa o departamento. Ideal para mudanzas,
-                        aseo profundo recurrente o post-remodelaciones.
-                    </p>
-                    <ul class="space-y-3 mb-8 text-xs font-semibold text-slate-700">
-                        <li class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-gogreen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
-                            Metraje calibrado y número de ambientes
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-gogreen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
-                            Lavado técnico de tapices y alfombras
-                        </li>
-                    </ul>
-                </div>
-                <a href="/cotizar/"
-                    class="block w-full text-center bg-goblue hover:bg-godark text-white font-900 py-4 rounded-xl shadow-lg shadow-blue-50 transition-all text-sm uppercase tracking-wider">
-                    Cotizar Mi Hogar
-                </a>
-            </section>
-
-            <!-- Opción Corporativa -->
-            <section
-                class="gc-choice-card active-dark p-8 rounded-[32px] flex flex-col justify-between h-full bg-slate-50/50">
-                <div>
-                    <!-- Icono Edificio -->
-                    <div class="w-14 h-14 bg-slate-100 text-godark rounded-2xl flex items-center justify-center mb-6">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M19 21V5a2 2 0 00-2-2H5a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                        </svg>
-                    </div>
-                    <span class="text-[10px] font-900 text-slate-400 uppercase tracking-widest block mb-1">Para Empresas
-                        e Instituciones</span>
-                    <h3 class="text-2xl font-900 text-godark mb-4 tracking-tight">Servicio Empresas</h3>
-                    <p class="text-slate-500 text-xs md:text-sm leading-relaxed mb-6 font-medium">
-                        Soluciones especializadas para oficinas, locales de retail, constructoras y obras inmobiliarias.
-                        Diseñamos planes operativos a tu medida.
-                    </p>
-                    <ul class="space-y-3 mb-8 text-xs font-semibold text-slate-700">
-                        <li class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-gogreen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
-                            Evaluación técnica en terreno sin costo
-                        </li>
-                        <li class="flex items-center gap-2">
-                            <svg class="w-4 h-4 text-gogreen" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
-                                    d="M5 13l4 4L19 7" />
-                            </svg>
-                            Facturación exenta e informes preventivos
-                        </li>
-                    </ul>
-                </div>
-                <a href="/empresas/"
-                    class="block w-full text-center bg-godark hover:bg-goblue text-white font-900 py-4 rounded-xl shadow-lg shadow-slate-100 transition-all text-sm uppercase tracking-wider">
-                    Solicitar Evaluación Técnica
-                </a>
-            </section>
-
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(this)">
+          <div class="acc-icon">🏢</div>
+          <div class="acc-title"><strong>Limpieza de Oficinas</strong><span>Espacios Corporativos</span></div>
+          <div class="acc-toggle">+</div>
         </div>
-
-        <!-- SECCIÓN DE INSTAGRAM (Look and Feel Sincronizado) -->
-        <div
-            class="bg-slate-50 border border-slate-100 rounded-[28px] p-6 md:p-8 flex flex-col sm:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-4 text-left">
-                <div
-                    class="w-12 h-12 bg-pink-50 text-pink-600 rounded-2xl flex items-center justify-center flex-shrink-0">
-                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
-                        <path
-                            d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                    </svg>
-                </div>
-                <div>
-                    <h4 class="text-sm font-800 text-godark leading-none">Resultados de Antes y Después</h4>
-                    <p class="text-[11px] text-slate-400 font-bold mt-1 uppercase tracking-tighter">Mira nuestra galería
-                        de trabajos reales ejecutados en Santiago</p>
-                </div>
+        <div class="acc-body">
+          <div class="acc-img"><img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/a45ba7b77_generated_b875c04f.png" alt="Limpieza de Oficinas" /></div>
+          <div>
+            <p class="acc-desc">Mantenemos ambientes de trabajo en su estado óptimo. Superficies desinfectadas, pisos impecables y un aire más limpio para tu equipo.</p>
+            <div class="kpi-list">
+              <span class="kpi">Protocolo Sanitario</span>
+              <span class="kpi">Horarios Flexibles</span>
+              <span class="kpi">Equipamiento Industrial</span>
             </div>
-            <a href="https://www.instagram.com/goclean_santiago/" target="_blank"
-                class="w-full sm:w-auto text-center px-6 py-3.5 bg-white border border-slate-200 hover:border-pink-500 rounded-xl text-xs font-800 uppercase tracking-widest text-slate-600 hover:text-pink-600 transition-all duration-300">
-                Seguir en Instagram
-            </a>
+            <a href="#contacto" class="acc-link">Cotizar este servicio →</a>
+          </div>
         </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(this)">
+          <div class="acc-icon">✨</div>
+          <div class="acc-title"><strong>Limpieza de Vidrios</strong><span>Transparencia Total</span></div>
+          <div class="acc-toggle">+</div>
+        </div>
+        <div class="acc-body">
+          <div class="acc-img"><img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/432514543_generated_67eeba5f.png" alt="Limpieza de Vidrios" /></div>
+          <div>
+            <p class="acc-desc">Ventanas y ventanales recuperan su transparencia cristalina. Trabajo en altura con equipamiento profesional y seguridad certificada.</p>
+            <div class="kpi-list">
+              <span class="kpi">Sin Marcas ni Residuos</span>
+              <span class="kpi">Trabajo en Altura</span>
+              <span class="kpi">Acabado Prístino</span>
+            </div>
+            <a href="#contacto" class="acc-link">Cotizar este servicio →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(this)">
+          <div class="acc-icon">💧</div>
+          <div class="acc-title"><strong>Lavado de Alfombras</strong><span>Limpieza Profunda de Fibras</span></div>
+          <div class="acc-toggle">+</div>
+        </div>
+        <div class="acc-body">
+          <div class="acc-img"><img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/ad0a33612_generated_50828e08.png" alt="Lavado de Alfombras" /></div>
+          <div>
+            <p class="acc-desc">Extracción profunda de suciedad, manchas y alérgenos incrustados en las fibras. Tu alfombra recupera color, textura y frescura original.</p>
+            <div class="kpi-list">
+              <span class="kpi">Extracción de Ácaros</span>
+              <span class="kpi">Restauración de Color</span>
+              <span class="kpi">Secado Rápido</span>
+            </div>
+            <a href="#contacto" class="acc-link">Cotizar este servicio →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(this)">
+          <div class="acc-icon">🛋️</div>
+          <div class="acc-title"><strong>Limpieza de Tapices</strong><span>Restauración de Muebles</span></div>
+          <div class="acc-toggle">+</div>
+        </div>
+        <div class="acc-body">
+          <div class="acc-img"><img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/ca1e9db09_generated_9f2095a8.png" alt="Tapices" /></div>
+          <div>
+            <p class="acc-desc">Sofás, butacas y sillas recuperan la frescura del primer día. Limpieza especializada según tipo de tela y nivel de uso.</p>
+            <div class="kpi-list">
+              <span class="kpi">Eliminación de Olores</span>
+              <span class="kpi">Cuidado de Telas</span>
+              <span class="kpi">Desinfección UV</span>
+            </div>
+            <a href="#contacto" class="acc-link">Cotizar este servicio →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(this)">
+          <div class="acc-icon">⭕</div>
+          <div class="acc-title"><strong>Pulido de Pisos</strong><span>Restauración de Superficies</span></div>
+          <div class="acc-toggle">+</div>
+        </div>
+        <div class="acc-body">
+          <div class="acc-img"><img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/a45ba7b77_generated_b875c04f.png" alt="Pulido de Pisos" /></div>
+          <div>
+            <p class="acc-desc">Devolvemos el brillo original a pisos flotantes, parquet y porcelanato con técnicas de pulido profesional y sellado protector.</p>
+            <div class="kpi-list">
+              <span class="kpi">Brillo Restaurado</span>
+              <span class="kpi">Sellado Protector</span>
+              <span class="kpi">Sin Rayaduras</span>
+            </div>
+            <a href="#contacto" class="acc-link">Cotizar este servicio →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(this)">
+          <div class="acc-icon">🛏️</div>
+          <div class="acc-title"><strong>Limpieza de Colchones</strong><span>Higiene para tu Descanso</span></div>
+          <div class="acc-toggle">+</div>
+        </div>
+        <div class="acc-body">
+          <div class="acc-img"><img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/ad0a33612_generated_50828e08.png" alt="Colchones" /></div>
+          <div>
+            <p class="acc-desc">Eliminamos ácaros, bacterias y manchas que se acumulan con el uso. Un colchón limpio es la base de un sueño saludable.</p>
+            <div class="kpi-list">
+              <span class="kpi">Anti-Ácaros</span>
+              <span class="kpi">Desinfección Total</span>
+              <span class="kpi">Sin Químicos Nocivos</span>
+            </div>
+            <a href="#contacto" class="acc-link">Cotizar este servicio →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <div class="acc-header" onclick="toggleAcc(this)">
+          <div class="acc-icon">🏪</div>
+          <div class="acc-title"><strong>Locales Comerciales</strong><span>Imagen Impecable</span></div>
+          <div class="acc-toggle">+</div>
+        </div>
+        <div class="acc-body">
+          <div class="acc-img"><img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/432514543_generated_67eeba5f.png" alt="Locales Comerciales" /></div>
+          <div>
+            <p class="acc-desc">Primera impresión perfecta para tus clientes. Limpieza integral de espacios comerciales con mínima interrupción operativa.</p>
+            <div class="kpi-list">
+              <span class="kpi">Fuera de Horario Hábil</span>
+              <span class="kpi">Protocolos Comerciales</span>
+              <span class="kpi">Mantenimiento Mensual</span>
+            </div>
+            <a href="#contacto" class="acc-link">Cotizar este servicio →</a>
+          </div>
+        </div>
+      </div>
 
     </div>
+  </div>
+</section>
 
-    <!-- Footer Simple -->
-    <footer class="text-center mt-10">
-        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest">
-            © 2026 Go Clean Santiago · Limpieza Profesional
-        </p>
-    </footer>
+<!-- PROCESS -->
+<section class="process" id="proceso">
+  <div class="container">
+    <div class="process-header">
+      <div class="process-tag"><span>Protocolo de Servicio</span></div>
+      <h2>3 pasos hacia la perfección</h2>
+    </div>
+    <div class="process-steps">
+      <div class="step">
+        <div class="step-icon">💬<div class="step-num">01</div></div>
+        <h3>Cotización Express</h3>
+        <p>Cuéntanos tu espacio y necesidades. En menos de 2 horas recibirás una cotización detallada y transparente — sin sorpresas.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">📅<div class="step-num">02</div></div>
+        <h3>Agendamiento Flexible</h3>
+        <p>Elige el día y horario que mejor te acomode. Nos adaptamos a tu rutina para minimizar cualquier interrupción.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🧹<div class="step-num">03</div></div>
+        <h3>Ejecución Profesional</h3>
+        <p>Nuestro equipo llega puntual con equipamiento de grado profesional. Cada superficie recibe tratamiento de precisión.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- BEFORE / AFTER -->
+<section class="ba-section">
+  <div class="container">
+    <div class="ba-tag"><span>Impacto Visual</span></div>
+    <h2 style="color:white;margin-bottom:16px;">La diferencia GoClean</h2>
+    <p class="ba-sub">Desliza el control para ver la transformación.</p>
+    <div class="slider-wrap" id="slider">
+      <div class="slider-after">
+        <img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/eb0f41743_generated_b8ef8854.png" alt="Después" />
+      </div>
+      <div class="slider-before" id="sliderBefore">
+        <img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/2cd4cdbc9_generated_8e680a3d.png" alt="Antes" />
+      </div>
+      <div class="slider-line" id="sliderLine">
+        <div class="slider-handle" id="sliderHandle">⇔</div>
+      </div>
+      <div class="slider-label-before">Antes</div>
+      <div class="slider-label-after">Después</div>
+    </div>
+  </div>
+</section>
+
+<!-- COVERAGE -->
+<section class="coverage" id="cobertura">
+  <div class="container">
+    <div class="coverage-inner">
+      <div class="coverage-img">
+        <img src="https://media.base44.com/images/public/6a39af17ad3202e64dc768d9/20a2793cb_generated_77b0c128.png" alt="Santiago de Chile" />
+        <div class="coverage-img-overlay"></div>
+        <div class="coverage-location">📍 Santiago, Chile</div>
+      </div>
+      <div>
+        <div class="tag">Zona de Cobertura</div>
+        <h2>Cubrimos todo<br><span class="muted">Santiago</span></h2>
+        <p class="coverage-desc">Operamos en más de 25 comunas de la Región Metropolitana, con tiempos de respuesta prioritarios en zonas premium.</p>
+        <div class="zone-group">
+          <div class="zone-label">Cobertura Premium</div>
+          <div class="zone-tags">
+            <span class="zone-tag primary">Las Condes</span>
+            <span class="zone-tag primary">Vitacura</span>
+            <span class="zone-tag primary">Lo Barnechea</span>
+            <span class="zone-tag primary">Providencia</span>
+            <span class="zone-tag primary">Ñuñoa</span>
+            <span class="zone-tag primary">La Reina</span>
+            <span class="zone-tag primary">Chicureo</span>
+            <span class="zone-tag primary">Santiago Centro</span>
+            <span class="zone-tag primary">Huechuraba</span>
+            <span class="zone-tag primary">La Florida</span>
+            <span class="zone-tag primary">Peñalolén</span>
+            <span class="zone-tag primary">San Miguel</span>
+          </div>
+        </div>
+        <div class="zone-group">
+          <div class="zone-label">Cobertura Extendida</div>
+          <div class="zone-tags">
+            <span class="zone-tag secondary">Puente Alto</span>
+            <span class="zone-tag secondary">Maipú</span>
+            <span class="zone-tag secondary">Quilicura</span>
+            <span class="zone-tag secondary">Colina</span>
+            <span class="zone-tag secondary">Peñaflor</span>
+            <span class="zone-tag secondary">Talagante</span>
+            <span class="zone-tag secondary">Buin</span>
+            <span class="zone-tag secondary">Calera de Tango</span>
+            <span class="zone-tag secondary">Paine</span>
+            <span class="zone-tag secondary">Curacaví</span>
+            <span class="zone-tag secondary">San Joaquín</span>
+            <span class="zone-tag secondary">Macul</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonios">
+  <div class="container">
+    <div class="testimonials-header">
+      <div class="tag" style="justify-content:center;">Resultados Verificados</div>
+      <h2>Lo que dicen nuestros clientes</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="tcard">
+        <div class="tcard-quote">“</div>
+        <p class="tcard-text">Contraté la limpieza profunda para mi departamento antes de la mudanza. Quedó impecable, como nuevo. El equipo fue puntual, profesional y muy detallista con cada rincón.</p>
+        <div class="tcard-footer">
+          <div><div class="tcard-name">Carolina Mendez</div><div class="tcard-meta">Las Condes · Limpieza Profunda</div></div>
+          <div class="tcard-stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-quote">“</div>
+        <p class="tcard-text">Llevamos 6 meses con GoClean para las oficinas y la diferencia se nota. El ambiente es más fresco, los vidrios siempre transparentes. Nuestro equipo trabaja más cómodo.</p>
+        <div class="tcard-footer">
+          <div><div class="tcard-name">Roberto Fuentes</div><div class="tcard-meta">Providencia · Oficinas + Vidrios</div></div>
+          <div class="tcard-stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-quote">“</div>
+        <p class="tcard-text">El pulido de pisos dejó mi parquet como el primer día. No pensé que se podría recuperar tanto brillo. Además cotizaron rápido y el precio fue justo y transparente.</p>
+        <div class="tcard-footer">
+          <div><div class="tcard-name">Valentina Rojas</div><div class="tcard-meta">Vitacura · Pulido de Pisos</div></div>
+          <div class="tcard-stars">★★★★★</div>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="tcard-quote">“</div>
+        <p class="tcard-text">Post remodelación, el departamento tenía polvo por todas partes. GoClean hizo un trabajo increíble en un solo día. Los colchones y alfombras quedaron como nuevos.</p>
+        <div class="tcard-footer">
+          <div><div class="tcard-name">Andrés Sepúlveda</div><div class="tcard-meta">Ñuñoa · Post-Remodelación</div></div>
+          <div class="tcard-stars">★★★★★</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contacto">
+  <div class="container">
+    <div class="contact-inner">
+      <div>
+        <div class="tag">Contacto</div>
+        <h2>Cotiza<br><span class="muted">sin compromiso</span></h2>
+        <p class="contact-desc">Completa el formulario y recibirás una cotización personalizada en menos de 2 horas.</p>
+        <div class="contact-info">
+          <a href="https://wa.me/56953435938" target="_blank" class="cinfo-item">
+            <div class="cinfo-icon">💬</div>
+            <div><div class="cinfo-label">WhatsApp</div><div class="cinfo-value">+56 9 5343 5938</div></div>
+          </a>
+          <a href="tel:+56953435938" class="cinfo-item">
+            <div class="cinfo-icon">📞</div>
+            <div><div class="cinfo-label">Teléfono</div><div class="cinfo-value">+56 9 5343 5938</div></div>
+          </a>
+          <a href="mailto:contacto@gocleansantiago.cl" class="cinfo-item">
+            <div class="cinfo-icon">✉️</div>
+            <div><div class="cinfo-label">Email</div><div class="cinfo-value">contacto@gocleansantiago.cl</div></div>
+          </a>
+          <div class="cinfo-item">
+            <div class="cinfo-icon">🕐</div>
+            <div><div class="cinfo-label">Horario</div><div class="cinfo-value">Lun-Sáb · 08:00 – 19:00</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="form-card" id="formCard">
+          <form id="contactForm" method="POST" action="enviar-cotizacion.php">
+            
+            <!-- Campo oculto para registrar origen de marketing de Go Clean -->
+            <input type="hidden" name="utm_source" id="gc-source" value="Web Directa" />
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Nombre completo *</label>
+                <input type="text" name="nombre_completo" class="form-input" placeholder="Tu nombre" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-input" placeholder="tu@email.cl" required />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Teléfono *</label>
+                <input type="tel" name="telefono" class="form-input" placeholder="+56 9 xxxx xxxx" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Comuna *</label>
+                <select name="comuna" class="form-select" required>
+                  <option value="">Seleccionar...</option>
+                  <option value="Las Condes">Las Condes</option>
+                  <option value="Vitacura">Vitacura</option>
+                  <option value="Lo Barnechea">Lo Barnechea</option>
+                  <option value="Providencia">Providencia</option>
+                  <option value="Ñuñoa">Ñuñoa</option>
+                  <option value="La Reina">La Reina</option>
+                  <option value="Santiago">Santiago Centro</option>
+                  <option value="Huechuraba">Huechuraba</option>
+                  <option value="La Florida">La Florida</option>
+                  <option value="Peñalolén">Peñalolén</option>
+                  <option value="San Miguel">San Miguel</option>
+                  <option value="Puente Alto">Puente Alto</option>
+                  <option value="Maipú">Maipú</option>
+                  <option value="Quilicura">Quilicura</option>
+                  <option value="Colina">Colina / Chicureo</option>
+                  <option value="Macul">Macul</option>
+                  <option value="Peñaflor">Peñaflor</option>
+                  <option value="Talagante">Talagante</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Servicio requerido *</label>
+              <select name="servicio_requerido" class="form-select" id="serviceSelect" required>
+                <option value="">Seleccionar servicio...</option>
+                <option value="Limpieza Profunda">Limpieza Profunda / Integral</option>
+                <option value="Limpieza de Oficinas">Limpieza de Oficinas</option>
+                <option value="Limpieza de Vidrios">Limpieza de Vidrios</option>
+                <option value="Lavado de Alfombras">Lavado de Alfombras</option>
+                <option value="Limpieza de Tapices">Limpieza de Tapices</option>
+                <option value="Pulido de Pisos">Pulido de Pisos</option>
+                <option value="Limpieza de Colchones">Limpieza de Colchones</option>
+                <option value="Locales Comerciales">Locales Comerciales</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Comentarios adicionales</label>
+              <textarea name="comentarios" class="form-textarea" rows="4" id="msgField" placeholder="Describe tu espacio, metros cuadrados, necesidades especiales..."></textarea>
+            </div>
+            <button type="submit" class="form-submit" id="gc-submit-btn">📨 Enviar Solicitud de Cotización</button>
+            <p class="form-legal">Al enviar aceptas nuestros términos y condiciones de tratamiento de datos fidedignos.</p>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <div class="form-success-icon">✅</div>
+            <h3>¡Solicitud enviada!</h3>
+            <p>Hemos recibido tus datos de forma segura. Tu número de folio será procesado de inmediato.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">
+          <img src="go.jpeg" alt="Go Clean Logo" onerror="this.style.display='none'" />
+          <span class="footer-logo-text">GoClean</span>
+        </div>
+        <p class="footer-tagline">Servicio profesional de limpieza de precisión en Santiago de Chile.</p>
+        <div class="footer-socials">
+          <a href="https://www.instagram.com/goclean_santiago/" target="_blank" class="social-btn">📸</a>
+          <a href="tel:+56953435938" class="social-btn">📞</a>
+          <a href="mailto:contacto@gocleansantiago.cl" class="social-btn">✉️</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Navegación</div>
+        <ul class="footer-links">
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#proceso">Proceso</a></li>
+          <li><a href="#cobertura">Cobertura</a></li>
+          <li><a href="#testimonios">Testimonios</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Servicios</div>
+        <ul class="footer-links">
+          <li><a href="#servicios">Limpieza Profunda</a></li>
+          <li><a href="#servicios">Oficinas</a></li>
+          <li><a href="#servicios">Vidrios</a></li>
+          <li><a href="#servicios">Alfombras</a></li>
+          <li><a href="#servicios">Pulido de Pisos</a></li>
+          <li><a href="#servicios">Colchones</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Contacto Directo</div>
+        <a href="https://wa.me/56953435938?text=Hola%20Go%20Clean,%20me%20gustar%C3%ADa%20cotizar%20un%20servicio." target="_blank" class="footer-wa">
+          <strong>WhatsApp</strong>
+          <span>+56 9 5343 5938</span>
+        </a>
+        <p class="footer-hours">Lun – Sáb<br>08:00 – 19:00 hrs</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 GoClean Santiago. Todos los derechos reservados.</span>
+      <div class="footer-legal">
+        <a href="https://www.gocleansantiago.cl/T%C3%A9rminos%20y%20Condiciones%20de%20Tratamiento%20de%20Datos%20Personales.pdf" target="_blank">Términos y Condiciones</a>
+        <a href="https://www.gocleansantiago.cl/T%C3%A9rminos%20y%20Condiciones%20de%20Tratamiento%20de%20Datos%20Personales.pdf" target="_blank">Privacidad</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- Floating WhatsApp -->
+<a href="https://wa.me/56953435938?text=Hola%20Go%20Clean,%20me%20gustar%C3%ADa%20cotizar%20un%20servicio." target="_blank" class="wa-float" id="waFloat">💬</a>
+
+<script>
+  // Accordion
+  function toggleAcc(header) {
+    const item = header.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.acc-item').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Before/After Slider
+  const slider = document.getElementById('slider');
+  const sliderBefore = document.getElementById('sliderBefore');
+  const sliderLine = document.getElementById('sliderLine');
+  let dragging = false;
+
+  function updateSlider(x) {
+    const rect = slider.getBoundingClientRect();
+    const pos = Math.max(0, Math.min((x - rect.left) / rect.width * 100, 100));
+    sliderBefore.style.clipPath = `inset(0 ${100 - pos}% 0 0)`;
+    sliderLine.style.left = pos + '%';
+  }
+
+  slider.addEventListener('mousedown', e => { dragging = true; updateSlider(e.clientX); });
+  document.addEventListener('mouseup', () => dragging = false);
+  document.addEventListener('mousemove', e => { if (dragging) updateSlider(e.clientX); });
+  slider.addEventListener('touchstart', e => updateSlider(e.touches[0].clientX));
+  slider.addEventListener('touchmove', e => { e.preventDefault(); updateSlider(e.touches[0].clientX); }, { passive: false });
+
+  // Floating WA button
+  const waFloat = document.getElementById('waFloat');
+  window.addEventListener('scroll', () => {
+    waFloat.classList.toggle('visible', window.scrollY > 400);
+  });
+
+  // Capturar parámetros de origen para tracking y cargar reseñas reales de Google
+  window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const source = urlParams.get('source') || urlParams.get('utm_source');
+    if (source) {
+      const sourceInput = document.getElementById('gc-source');
+      if (sourceInput) {
+        sourceInput.value = source.charAt(0).toUpperCase() + source.slice(1);
+      }
+    }
+
+    // Cargar reseñas reales de Google desde el cache local si existe
+    fetch('google-reviews-cache.json')
+      .then(response => {
+        if (!response.ok) throw new Error('No cache file');
+        return response.json();
+      })
+      .then(data => {
+        const reviews = data.reviews || [];
+        if (reviews.length === 0) return;
+        
+        const grid = document.querySelector('.testimonials-grid');
+        if (!grid) return;
+        
+        // Filtrar por reseñas de 4 o 5 estrellas
+        const starsMapping = { "ONE": 1, "TWO": 2, "THREE": 3, "FOUR": 4, "FIVE": 5 };
+        const filteredReviews = reviews
+          .filter(r => {
+            const score = starsMapping[r.starRating] || parseInt(r.starRating) || 5;
+            return score >= 4;
+          })
+          .slice(0, 4);
+          
+        if (filteredReviews.length === 0) return;
+        
+        grid.innerHTML = '';
+        
+        filteredReviews.forEach(r => {
+          const score = starsMapping[r.starRating] || parseInt(r.starRating) || 5;
+          const starsHtml = '★'.repeat(score) + '☆'.repeat(5 - score);
+          const comment = r.comment || 'Excelente servicio de limpieza, muy recomendados.';
+          const name = r.reviewer.displayName;
+          
+          const card = document.createElement('div');
+          card.className = 'tcard';
+          card.innerHTML = `
+            <div class="tcard-quote">“</div>
+            <p class="tcard-text">${comment}</p>
+            <div class="tcard-footer">
+              <div>
+                <div class="tcard-name">${name}</div>
+                <div class="tcard-meta">Google Business · Cliente Verificado</div>
+              </div>
+              <div class="tcard-stars">${starsHtml}</div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      })
+      .catch(err => {
+        console.log('Utilizando testimonios estáticos del estándar de GoClean:', err.message);
+      });
+  });
+
+  // Validar y enviar al backend PHP corporativo de Go Clean
+  const contactForm = document.getElementById('contactForm');
+  contactForm.addEventListener('submit', (e) => {
+    // Permitir el comportamiento normal del formulario hacia enviar-cotizacion.php
+    const submitBtn = document.getElementById('gc-submit-btn');
+    submitBtn.innerText = "Procesando...";
+    submitBtn.disabled = true;
+  });
+</script>
 </body>
-
 </html>
